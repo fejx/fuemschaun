@@ -5,11 +5,26 @@ window.browser = (function () {
 })()
 
 getOrWaitForElement('video', isValidVideo)
-    .then(announceVideoElementFound)
-    .catch(error => console.error('No video element found:', error))
+    .then(announceFound)
+    .catch(announceNotFound)
 
-function announceVideoElementFound(element) {
-    console.log('Found video element', element)
+function announceFound(element) {
+    console.log('Found', element)
+    const message = {
+        name: 'video-element-found',
+        found: true
+    }
+    browser.runtime.sendMessage(message)
+}
+
+function announceNotFound(error) {
+    console.error('Not found', error)
+    const message = {
+        name: 'video-element-found',
+        found: false,
+        reason: error
+    }
+    browser.runtime.sendMessage(message)
 }
 
 function isValidVideo(node) {
