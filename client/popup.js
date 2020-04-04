@@ -5,10 +5,16 @@ window.browser = (function () {
 })()
 
 const app = new Vue({
-    el: 'main'
+    el: 'main',
+    data: {
+        state: 'searching'
+    },
+    methods: {
+        newSession: () => {
+            // TODO
+        }
+    }
 })
-
-const statusText = document.getElementById('status-text')
 
 getActiveTab().then((tab) => {
     browser.tabs.executeScript(
@@ -18,9 +24,9 @@ getActiveTab().then((tab) => {
     browser.runtime.onMessage.addListener((message, sender) => {
         if (message.name == 'video-element-found') {
             if (message.found)
-                statusText.innerHTML = 'Video found'
+                app.state = 'found'
             else
-                statusText.innerHTML = 'No video found'
+                app.state = 'not-found'
         }
     })
 })

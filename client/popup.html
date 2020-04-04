@@ -8,7 +8,12 @@
 
 <body>
     <main>
-        <p id="status-text">Looking for video elements...</p>
+        <p v-if="state == 'searching'">Searching</p>
+        <p v-else-if="state == 'no-found'">No suitable video elements found</p>
+        <div v-else-if="state == 'found'">
+            <button @click="newSession">Open new session</button>
+        </div>
+        <p v-else>Unknown state: {{state}}</p>
     </main>
     <script src="lib/vue.js"></script>
     <script src="popup.js"></script>
