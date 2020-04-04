@@ -4,16 +4,40 @@ Socket data transmission is done using [socket.io](socket.io).
 
 ## New Session
 
-Http-GET-Request to `/session/new`
-Returns session id for newly created session.
+Automatically created on connect if no joinid is provided.
+
+On succesfull creation `created`-event with the new session id is fired.
+Example body:
+
+```json
+{ sessionId: "xxxx-243254-xxxx" }
+```
 
 ## Join Session
 
-Open up socket connection to `/session/{session-id}`.
+A request parameter has to be provided with the id as value.
+
+Example request:
+```
+url:port?joinid=xxxx-243254-xxxx&username=asdf
+```
+
+Upon succesfull join a `joined`-event is fired with the username in body.
+
+Example body:
+```json
+{ name: "Fritz Phantom" }
+```
 
 ## Leave Session
 
 Using default `disconnect`-event from socket.io.
+
+Remaining room participants receive `leave`-event with username of the user who is leaving
+Example body:
+```json
+{ name: "Fritz Phantom" }
+```
 
 ## Change username
 
