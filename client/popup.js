@@ -4,6 +4,10 @@ window.browser = (function () {
         window.chrome;
 })()
 
+const app = new Vue({
+    el: 'main'
+})
+
 const statusText = document.getElementById('status-text')
 
 getActiveTab().then((tab) => {
