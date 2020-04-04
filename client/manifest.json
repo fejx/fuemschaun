@@ -22,9 +22,9 @@
                 "<all_urls>"
             ],
             "js": [
-                "content-script.js"
+                "content-scripts/detect-video-element.js"
             ],
-            "run_at": "document_start"
+            "run_at": "document_idle"
         }
     ],
     "permissions": [
