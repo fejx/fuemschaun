@@ -39,10 +39,6 @@ function closeSession(socket, message = false) {
 function trySendingToReceivers(socket, event, data) {
 	targetRoom = Object.keys(socket.rooms)[1];
 	console.log('got a ' + event + ' event on ' + targetRoom);
-	// for safety reasons
-	data = {
-		position: data.position
-	};
 	io.to(targetRoom).emit(event, data);
 }
 
@@ -64,7 +60,10 @@ function removeFromRoom(socket) {
 		}
 	}
 	deleteRoomIfEmpty(targetRoom);
-	io.to(targetRoom).emit('leave', 'user ' + username + ' left the session');
+	io.to(targetRoom).emit('leave', {
+		name: username, 
+		message: 'user ' + username + ' left the session'
+	});
 }
 
 function createAndJoinRoomIfMaxRoomsNotReached(socket) {
@@ -76,8 +75,11 @@ function createAndJoinRoomIfMaxRoomsNotReached(socket) {
 		sessionId = uuid.v4()
 		socket.join(sessionId)
 		existing_rooms[sessionId] = dict;
-		socket.emit('created', 'session does not exist, created new with id ' + sessionId);
-		console.log('crated room ' + sessionId);
+		socket.emit('created', {
+			sessionId: sessionId,
+			message: 'session does not exist, created new with id ' + sessionId
+		});
+		console.log('created room ' + sessionId);
 	}
 }
 
@@ -85,7 +87,10 @@ function joinRoomIfExists(socket, joinid) {
 	if (joinid in existing_rooms) {
 		existing_rooms[joinid][socket.id] = username
 		socket.join(joinid)
-		io.to(joinid).emit('joined', username + ' joined the session');
+		io.to(joinid).emit('joined', {
+			name: username,
+			message: username + ' joined the session'}
+		);
 		console.log(username + ' joined session ' + joinid);
 	} else {
 		closeSession(socket, 'session ' + joinid + ' does not exist');
@@ -110,15 +115,15 @@ io.on('connection', function (socket) {
 		removeFromRoom(socket);
 	})
 
-	socket.on('pause', function (data) {
-		trySendingToReceivers(socket, 'pause', data)
+	socket.on('playback-position', function (data) {
+		trySendingToReceivers(socket, 'playback-position', { position: data.position })
 	});
 
-	socket.on('play', function (data) {
-		trySendingToReceivers(socket, 'play', data)
+	socket.on('playback-status', function (data) {
+		trySendingToReceivers(socket, 'play', { playing: data.playing })
 	});
 
-	socket.on('buffer', function (data) {
-		trySendingToReceivers(socket, 'buffer', data)
+	socket.on('buffering', function () {
+		trySendingToReceivers(socket, 'buffering', { buffering: true })
 	});
 });
