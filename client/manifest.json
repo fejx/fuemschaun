@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Fümschaun",
+    "description": "This extension allows synchronized viewing of videos in the browser with your friends.",
+    "version": "1.0",
+    "author": "Paul Hörmann & Florian Jahn",
+    "icons": {
+        "48": "icon/icon38.png"
+    },
+    "browser_action": {
+        "default_title": "Fümschaun",
+        "default_icon": {
+            "19": "icon/icon20.png",
+            "20": "icon/icon20.png",
+            "38": "icon/icon38.png"
+        },
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+    ],
+    "permissions": [
+        "activeTab"
+    ]
+}
