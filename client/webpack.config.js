@@ -1,11 +1,11 @@
 var webpack = require("webpack"),
-    path = require("path"),
-    fileSystem = require("fs"),
-    env = require("./utils/env"),
-    CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
-    CopyWebpackPlugin = require("copy-webpack-plugin"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    WriteFilePlugin = require("write-file-webpack-plugin");
+  path = require("path"),
+  fileSystem = require("fs"),
+  env = require("./utils/env"),
+  CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
+  CopyWebpackPlugin = require("copy-webpack-plugin"),
+  HtmlWebpackPlugin = require("html-webpack-plugin"),
+  WriteFilePlugin = require("write-file-webpack-plugin");
 
 // load the secrets
 var alias = {};
@@ -27,7 +27,7 @@ var options = {
     content: path.join(__dirname, "src", "js", "content.js")
   },
   chromeExtensionBoilerplate: {
-    notHotReload: [ "content" ]
+    notHotReload: ["content"]
   },
   output: {
     path: path.join(__dirname, "build"),
