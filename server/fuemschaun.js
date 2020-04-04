@@ -95,8 +95,8 @@ function joinRoomIfExists(socket, joinid) {
 io.on('connection', function (socket) {
 	console.log('got a new connection with id ', socket.id);
 	
-	username = socket.request.headers.username
-	joinid = socket.request.headers.joinid
+	username = socket.handshake.query.username
+	joinid = socket.handshake.query.joinid
 
 	if (!username) {
 		closeSession(socket, 'need to define username');
