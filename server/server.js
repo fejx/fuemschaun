@@ -1,88 +1,97 @@
 var express = require('express');
+var uuid = require('uuid');
 var app = express();
 var server = require('http').createServer(app);
 
 var io = require('socket.io')(server);
 
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
+const max_rooms = 2000;
+
 server.listen(port, function () {
 	console.log('werbserver listens on port ', port);
 });
 
-let hosted_sessions = {};
-let joined_sessions = {};
-
-function notifyOthers(socket, ids, event, data) {
-	console.log('notifying others')
-	logAndEmit(socket, 'ok', 'transmitting event ' + event + ' from ' + socket.id + ' to others')
-	for (let id of ids) {
-		console.log('receiver id ', id);
-		io.to(id).emit(event, data);
-	}
-}
-
-function logAndEmit(socket, event, message) {
-	socket.emit(event, message);
-	console.log(message);
-}
+let existing_rooms = {};
 
 function closeSession(socket, message = false) {
-	logAndEmit(socket, 'quit', message ? message : 'sessionId ' + socket.id + ' does not exist');
-	socket.disconnect(true)
+	socket.emit('disconnect', message ? message : 'sessionId ' + socket.id + ' does not exist');
+	socket.disconnect()
 }
 
 function trySendingToReceivers(socket, event, data) {
-	console.log('got a ' + event + ' event');
+	targetRoom = Object.keys(socket.rooms)[1];
+	console.log('got a ' + event + ' event on ' + targetRoom);
 	// for safety reasons
 	data = {
 		position: data.position
 	};
-	socketId = socket.id;
-	if (socketId in joined_sessions) {
-		notifyOthers(socket, hosted_sessions[joined_sessions[socketId].sessionId].sessionIds, event, data);
-	} else if (socketId in hosted_sessions) {
-		notifyOthers(socket, hosted_sessions[socketId].sessionIds, event, data);
-	} else {
-		closeSession(socket);
+	io.to(targetRoom).emit(event, data);
+}
+
+function deleteRoomIfEmpty(targetRoom) {
+	if (Object.keys(existing_rooms[targetRoom]).length < 1) {
+		console.log('deleting room ' + targetRoom + ' because no participants are left');
+		delete existing_rooms[targetRoom];
 	}
 }
 
-io.on('disconnect', (reason) => {
-	console.log('got a disconnect')
-});
+function removeFromRoom(socket) {
+	targetRoom = Object.keys(socket.rooms)[1];
+	console.log('got a disconnect on room ', targetRoom);
+	let username = undefined
+	for (let member of Object.keys(existing_rooms[targetRoom])) {
+		if (member == socket.id) {
+			username =existing_rooms[targetRoom][member] 
+			delete existing_rooms[targetRoom][member]
+		}
+	}
+	deleteRoomIfEmpty(targetRoom);
+	io.to(targetRoom).emit('leave', 'user ' + username + ' left the session');
+}
+
+function createAndJoinRoomIfMaxRoomsNotReached(socket) {
+	if (Object.keys(existing_rooms) > max_rooms) {
+		closeSession(socket, 'maximum numbers of parties reached');
+	} else {
+		dict = {};
+		dict[socket.id] = username;
+		sessionId = uuid.v4()
+		socket.join(sessionId)
+		existing_rooms[sessionId] = dict;
+		socket.emit('created', 'session does not exist, created new with id ' + sessionId);
+		console.log('crated room ' + sessionId);
+	}
+}
+
+function joinRoomIfExists(socket, joinid) {
+	if (joinid in existing_rooms) {
+		existing_rooms[joinid][socket.id] = username
+		socket.join(joinid)
+		io.to(joinid).emit('joined', username + ' joined the session');
+		console.log(username + ' joined session ' + joinid);
+	} else {
+		closeSession(socket, 'session ' + joinid + ' does not exist');
+	}
+}
 
 io.on('connection', function (socket) {
-	var addedUser = false;
-	console.log('got a new connection');
-	console.log('sessionid: ', socket.id);
+	console.log('got a new connection with id ', socket.id);
 	
-	console.log(socket.request.headers);
+	username = socket.request.headers.username
+	joinid = socket.request.headers.joinid
 
-	if ("joinid" in socket.request.headers) {
-		id = socket.request.headers.joinid
-		if (id in hosted_sessions) {
-			joined_sessions[socket.id] = {
-				"user": username,
-				"sessionId": id
-			};
-			hosted_sessions[id].sessionIds.push(socket.id)
-			console.log(hosted_sessions[id].sessionIds)
-			socket.emit('joined', 'session exists');
-			console.log('session ' + id + ' exists');
-		} else {
-			socket.disconnect(true);
-		}
-	} else if ('username' in socket.request.headers) {
-		username = socket.request.headers.username
-		socket.emit('created', 'user ' + username + ' created session with id ' + socket.id);
-		console.log('user ' + username + ' created session with id ' + socket.id);
-		hosted_sessions[socket.id] = {
-			"user": username,
-			"sessionIds": [ socket.id ]
-		};
+	if (!username) {
+		closeSession(socket, 'need to define username');
+	} else if (joinid) {
+		joinRoomIfExists(socket, joinid);
 	} else {
-		closeSession(socket, 'need to define username')
+		createAndJoinRoomIfMaxRoomsNotReached(socket);
 	}
+
+	socket.on('disconnecting', function() {
+		removeFromRoom(socket);
+	})
 
 	socket.on('pause', function (data) {
 		trySendingToReceivers(socket, 'pause', data)
