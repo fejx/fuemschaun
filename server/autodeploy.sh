@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git fetch
+
 if [[ "$(git status -uno | grep up-to-date)" == "" ]]; then
 	echo "Updates available, pulling and deploying";
 	git pull;
