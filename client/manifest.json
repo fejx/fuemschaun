@@ -17,16 +17,6 @@
         "default_popup": "popup.html"
     },
     "content_scripts": [
-        {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "modules/elementFinding.js",
-                "content-scripts/detect-video-element.js"
-            ],
-            "run_at": "document_idle"
-        }
     ],
     "permissions": [
         "activeTab"
