@@ -1,16 +1,33 @@
 var express = require('express');
 var uuid = require('uuid');
 var app = express();
-var server = require('http').createServer(app);
+var fs = require('fs');
 
-var io = require('socket.io')(server);
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8889;
+const env = process.env.NODE_ENV || "dev";
 const max_rooms = 2000;
 
+const certpath = process.env.CERTPATH || "/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/";
+
+var server = undefined;
+
+if (env === "production") {
+	var https = require('https');
+	server = https.createServer({
+		key: fs.readFileSync(certpath + "privkey.pem"),	
+		cert: fs.readFileSync(certpath + "fullchain.pem"),	
+		ca: fs.readFileSync(certpath + "chain.pem"),	
+	})
+} else {
+	var http = require('http');
+	server = http.createServer();
+}
+	
 server.listen(port, function () {
 	console.log('werbserver listens on port ', port);
 });
+
+var io = require('socket.io')(server);
 
 let existing_rooms = {};
 
