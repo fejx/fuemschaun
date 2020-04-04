@@ -6,7 +6,11 @@
   },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
+    "default_icon": {
+      "19": "icon/icon20.png",
+      "20": "icon/icon20.png",
+      "38": "icon/icon38.png"
+    }
   },
   "content_scripts": [
     {
@@ -19,7 +23,7 @@
     }
   ],
   "icons": {
-    "128": "icon-128.png"
+    "48": "icon/icon38.png"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
