@@ -9,7 +9,7 @@ install:
 
 
 prod: kill
-	nohup node $(FILE) >> $(TARGET) 2>&1 &
+	NODE_ENV=production nohup node $(FILE) >> $(TARGET) 2>&1 &
 
 kill:
 	@if [ "$(strip $(PID))" != "" ]; then \
