@@ -12,7 +12,6 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
     .catch(announceNotFound)
 
 function announceFound(element) {
-    console.log('Founda', element)
     connectForm.showConnectForm(username => {
         console.log('Simulating connecting as user', username)
         return null // No error
