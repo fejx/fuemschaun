@@ -1,4 +1,5 @@
 import * as elementFinder from "./content/element-finder";
+import * as connectForm from './content/show-connect-form'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -17,6 +18,10 @@ function announceFound(element) {
         found: true
     }
     browser.runtime.sendMessage(message)
+    connectForm.showConnectForm(username => {
+        console.log('Simulating connecting as user', username)
+        return null // No error
+    })
 }
 
 function announceNotFound(error) {
