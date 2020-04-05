@@ -1,4 +1,6 @@
-import * as elementFinder from "./content/element-finder";
+import * as elementFinder from "./content/element-finder"
+import * as videoListener from "./content/video-listener.js"
+
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -16,6 +18,8 @@ function announceFound(element) {
         name: 'video-element-found',
         found: true
     }
+    console.log('add listeners')
+    videoListener.addListeners(element, () => {}, () => {}, () => {})
     browser.runtime.sendMessage(message)
 }
 
