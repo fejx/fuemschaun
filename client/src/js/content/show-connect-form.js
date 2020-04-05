@@ -12,7 +12,6 @@ export function showConnectForm(onConnectClick) {
 /**
  * @callback connectClickCallback
  * @param {string} username
- * @returns {string} null if successful, error message if error
  */
 
 function createForm(onConnectClick) {
@@ -33,13 +32,8 @@ function createForm(onConnectClick) {
         e.textContent = 'Create Session'
         e.addEventListener('click', () => {
             // TODO: Check if the username is valid
-            const errorMessage = onConnectClick(usernameInput.value)
-            if (!errorMessage)
-                removeForm()
-            else {
-                // TODO: Show error message in UI
-                console.error('Could not create session:', errorMessage)
-            }
+            onConnectClick(usernameInput.value)
+            removeForm()
         })
     })
 
