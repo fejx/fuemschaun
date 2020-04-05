@@ -119,6 +119,10 @@ io.on('connection', function (socket) {
 		trySendingToReceivers(socket, 'playback-position', { position: data.position })
 	});
 
+	socket.on('playback-position', function (data) {
+		trySendingToReceivers(socket, 'playback-position', { position: data.position })
+	});
+
 	socket.on('playback-status', function (data) {
 		trySendingToReceivers(socket, 'play', { playing: data.playing })
 	});
