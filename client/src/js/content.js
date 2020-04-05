@@ -13,11 +13,6 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 
 function announceFound(element) {
     console.log('Founda', element)
-    const message = {
-        name: 'video-element-found',
-        found: true
-    }
-    browser.runtime.sendMessage(message)
     connectForm.showConnectForm(username => {
         console.log('Simulating connecting as user', username)
         return null // No error
@@ -26,12 +21,6 @@ function announceFound(element) {
 
 function announceNotFound(error) {
     console.error('Not found', error)
-    const message = {
-        name: 'video-element-found',
-        found: false,
-        reason: error
-    }
-    browser.runtime.sendMessage(message)
 }
 
 function isValidVideo(node) {
