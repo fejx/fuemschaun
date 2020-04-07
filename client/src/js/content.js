@@ -2,6 +2,7 @@ import * as elementFinder from "./content/element-finder"
 import * as videoListener from "./content/video-listener"
 import * as connectForm from './content/show-connect-form'
 import { SocketService } from './content/socket-service'
+import { VideoWrapper } from './content/video-wrapper'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -21,6 +22,7 @@ function announceFound(element) {
             // TODO: Add session url to current url as query param
             console.log('Session id: ', sessionId)
         })
+        const wrapper = new VideoWrapper(element)
 
         videoListener.addListeners(
             element,
@@ -34,6 +36,22 @@ function announceFound(element) {
                 service.sendBuffering(onBufferingEvent.play)
             }
         )
+        service.onPlayOrPause(isPlaying => {
+            if (isPlaying)
+                wrapper.play()
+            else
+                wrapper.pause()
+        })
+        service.onPositionChanged(newPosition => {
+            wrapper.jumpTo(newPosition)
+        })
+        service.onBuffering(isBuffering => {
+            // TODO: Show message in feed
+            if (isBuffering)
+                wrapper.pause()
+            else
+                wrapper.play()
+        })
     })
 }
 
