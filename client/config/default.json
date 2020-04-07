@@ -1,0 +1,5 @@
+{
+    "socket" : {
+        "url": "http://localhost:8889"
+    }
+}

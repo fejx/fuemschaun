@@ -2,7 +2,7 @@ import * as io from 'socket.io-client'
 
 export class SocketService {
     constructor(username, sessionId = '') {
-        this.socket = io.connect('http://localhost:8889', {
+        this.socket = io.connect(CONFIG.socket.url, {
             query: {
                 username: username,
                 joinid: sessionId
