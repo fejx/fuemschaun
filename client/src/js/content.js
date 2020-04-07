@@ -1,5 +1,4 @@
 import * as elementFinder from "./content/element-finder"
-import * as videoListener from "./content/video-listener"
 import * as connectForm from './content/show-connect-form'
 import * as urlManip from './content/urlManipulation'
 import { SocketService } from './content/socket-service'
@@ -25,18 +24,15 @@ function announceFound(element) {
         })
         const wrapper = new VideoWrapper(element)
 
-        videoListener.addListeners(
-            element,
-            playbackEvent => {
-                service.sendPlayOrPause(playbackEvent.play)
-            },
-            positionChangedEvent => {
-                service.sendPositionChanged(positionChangedEvent.currentTime)
-            },
-            onBufferingEvent => {
-                service.sendBuffering(onBufferingEvent.play)
-            }
-        )
+        wrapper.onPlaybackChanged(event => {
+            service.sendPlayOrPause(event.play)
+        })
+        wrapper.onPositionChanged(event => {
+            service.sendPositionChanged(event.currentTime)
+        })
+        wrapper.onBuffering(event => {
+            service.sendBuffering(!event.play)
+        })
         service.onPlayOrPause(isPlaying => {
             if (isPlaying)
                 wrapper.play()
