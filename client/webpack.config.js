@@ -1,11 +1,13 @@
-var webpack = require("webpack"),
+const
+  webpack = require("webpack"),
   path = require("path"),
   fileSystem = require("fs"),
   env = require("./utils/env"),
   CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
   CopyWebpackPlugin = require("copy-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
-  WriteFilePlugin = require("write-file-webpack-plugin");
+  WriteFilePlugin = require("write-file-webpack-plugin")
+  ConfigWebpackPlugin = require('config-webpack')
 
 // load the secrets
 var alias = {};
@@ -93,7 +95,8 @@ var options = {
       filename: "background.html",
       chunks: ["background"]
     }),
-    new WriteFilePlugin()
+    new WriteFilePlugin(),
+    new ConfigWebpackPlugin()
   ]
 };
 
