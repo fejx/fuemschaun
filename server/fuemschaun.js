@@ -24,7 +24,7 @@ if (env === "production") {
 }
 	
 server.listen(port, function () {
-	console.log('werbserver listens on port ', port);
+	console.log('webserver listens on port ', port);
 });
 
 var io = require('socket.io')(server);
