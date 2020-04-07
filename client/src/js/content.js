@@ -1,6 +1,7 @@
 import * as elementFinder from "./content/element-finder"
 import * as videoListener from "./content/video-listener"
 import * as connectForm from './content/show-connect-form'
+import { SocketService } from './content/socket-service'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -15,8 +16,12 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 function announceFound(element) {
     videoListener.addListeners(element, () => {}, () => {}, () => {})
     connectForm.showConnectForm(username => {
-        console.log('Simulating connecting as user', username)
-        return null // No error
+        console.log('Connecting as user', username)
+        const service = new SocketService(username)
+        service.onSessionCreated(sessionId => {
+            // TODO: Add session url to current url as query param
+            console.log('Session id: ', sessionId)
+        })
     })
 }
 
