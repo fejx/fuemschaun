@@ -38,7 +38,7 @@ function closeSession(socket, message = false) {
 
 function trySendingToReceivers(socket, event, data) {
 	targetRoom = Object.keys(socket.rooms)[1];
-	console.log('got a ' + event + ' event on ' + targetRoom);
+	console.log('got a ' + event + ' event on ' + targetRoom + ' with the message ' + JSON.stringify(data));
 	io.to(targetRoom).emit(event, data);
 }
 
