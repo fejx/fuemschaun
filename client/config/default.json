@@ -1,5 +1,6 @@
 {
     "socket" : {
         "url": "http://localhost:8889"
-    }
+    },
+    "sessionIdQueryParam": "fue-sid"
 }

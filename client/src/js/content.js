@@ -1,6 +1,7 @@
 import * as elementFinder from "./content/element-finder"
 import * as videoListener from "./content/video-listener"
 import * as connectForm from './content/show-connect-form'
+import * as urlManip from './content/urlManipulation'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 
@@ -17,10 +18,10 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 function announceFound(element) {
     connectForm.showConnectForm(username => {
         console.log('Connecting as user', username)
-        const service = new SocketService(username)
+        const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
+        const service = new SocketService(username, sessionId)
         service.onSessionCreated(sessionId => {
-            // TODO: Add session url to current url as query param
-            console.log('Session id: ', sessionId)
+            urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
         })
         const wrapper = new VideoWrapper(element)
 
