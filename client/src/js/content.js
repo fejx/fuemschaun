@@ -14,7 +14,6 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
     .catch(announceNotFound)
 
 function announceFound(element) {
-    videoListener.addListeners(element, () => {}, () => {}, () => {})
     connectForm.showConnectForm(username => {
         console.log('Connecting as user', username)
         const service = new SocketService(username)
@@ -22,6 +21,19 @@ function announceFound(element) {
             // TODO: Add session url to current url as query param
             console.log('Session id: ', sessionId)
         })
+
+        videoListener.addListeners(
+            element,
+            playbackEvent => {
+                service.sendPlayOrPause(playbackEvent.play)
+            },
+            positionChangedEvent => {
+                service.sendPositionChanged(positionChangedEvent.currentTime)
+            },
+            onBufferingEvent => {
+                service.sendBuffering(onBufferingEvent.play)
+            }
+        )
     })
 }
 
