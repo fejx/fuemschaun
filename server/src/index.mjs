@@ -28,7 +28,7 @@ server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
 
-let existing_rooms = {}
+const existingRooms = {}
 
 function closeSession(socket, message = false) {
 	socket.emit('disconnect', message ? message : 'sessionId ' + socket.id + ' does not exist')
@@ -42,9 +42,9 @@ function trySendingToReceivers(socket, event, data) {
 }
 
 function deleteRoomIfEmpty(targetRoom) {
-	if (Object.keys(existing_rooms[targetRoom]).length < 1) {
+	if (Object.keys(existingRooms[targetRoom]).length < 1) {
 		console.log('deleting room ' + targetRoom + ' because no participants are left')
-		delete existing_rooms[targetRoom]
+		delete existingRooms[targetRoom]
 	}
 }
 
@@ -52,10 +52,10 @@ function removeFromRoom(socket) {
 	targetRoom = Object.keys(socket.rooms)[1]
 	console.log('got a disconnect on room ', targetRoom)
 	let username = undefined
-	for (let member of Object.keys(existing_rooms[targetRoom])) {
+	for (let member of Object.keys(existingRooms[targetRoom])) {
 		if (member == socket.id) {
-			username = existing_rooms[targetRoom][member]
-			delete existing_rooms[targetRoom][member]
+			username = existingRooms[targetRoom][member]
+			delete existingRooms[targetRoom][member]
 		}
 	}
 	deleteRoomIfEmpty(targetRoom)
@@ -66,14 +66,14 @@ function removeFromRoom(socket) {
 }
 
 function createAndJoinRoomIfMaxRoomsNotReached(socket, username) {
-	if (Object.keys(existing_rooms) > max_rooms) {
+	if (Object.keys(existingRooms) > max_rooms) {
 		closeSession(socket, 'maximum numbers of parties reached')
 	} else {
 		const dict = {}
 		dict[socket.id] = username
 		const sessionId = uuid.v4()
 		socket.join(sessionId)
-		existing_rooms[sessionId] = dict
+		existingRooms[sessionId] = dict
 		socket.emit('created', {
 			sessionId: sessionId,
 			message: 'session does not exist, created new with id ' + sessionId
@@ -83,11 +83,11 @@ function createAndJoinRoomIfMaxRoomsNotReached(socket, username) {
 }
 
 function roomExists(sessionId) {
-	return sessionId in existing_rooms
+	return sessionId in existingRooms
 }
 
 function joinRoom(socket, joinid) {
-	existing_rooms[joinid][socket.id] = username
+	existingRooms[joinid][socket.id] = username
 	socket.join(joinid)
 	io.to(joinid).emit('joined', {
 		name: username,
