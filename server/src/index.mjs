@@ -6,7 +6,7 @@ import socketio from 'socket.io'
 
 const port = process.env.PORT || 8889
 const env = process.env.NODE_ENV || 'dev'
-const max_rooms = 2000
+const maxRooms = 2000
 
 const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/'
 
@@ -66,7 +66,7 @@ function removeFromRoom(socket) {
 }
 
 function createAndJoinRoomIfMaxRoomsNotReached(socket, username) {
-	if (Object.keys(existingRooms) > max_rooms) {
+	if (Object.keys(existingRooms) > maxRooms) {
 		closeSession(socket, 'maximum numbers of parties reached')
 	} else {
 		const dict = {}
