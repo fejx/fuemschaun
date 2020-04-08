@@ -55,13 +55,13 @@ function removeFromRoom(socket) {
 	let username = undefined
 	for (let member of Object.keys(existing_rooms[targetRoom])) {
 		if (member == socket.id) {
-			username =existing_rooms[targetRoom][member] 
+			username = existing_rooms[targetRoom][member]
 			delete existing_rooms[targetRoom][member]
 		}
 	}
 	deleteRoomIfEmpty(targetRoom);
 	io.to(targetRoom).emit('leave', {
-		name: username, 
+		name: username,
 		message: 'user ' + username + ' left the session'
 	});
 }
@@ -83,18 +83,18 @@ function createAndJoinRoomIfMaxRoomsNotReached(socket) {
 	}
 }
 
-function joinRoomIfExists(socket, joinid) {
-	if (joinid in existing_rooms) {
-		existing_rooms[joinid][socket.id] = username
-		socket.join(joinid)
-		io.to(joinid).emit('joined', {
-			name: username,
-			message: username + ' joined the session'}
-		);
-		console.log(username + ' joined session ' + joinid);
-	} else {
-		closeSession(socket, 'session ' + joinid + ' does not exist');
-	}
+function roomExists(sessionId) {
+	return sessionId in existing_rooms
+}
+
+function joinRoom(socket, joinid) {
+	existing_rooms[joinid][socket.id] = username
+	socket.join(joinid)
+	io.to(joinid).emit('joined', {
+		name: username,
+		message: username + ' joined the session'
+	});
+	console.log(username + ' joined session ' + joinid);
 }
 
 io.on('connection', function (socket) {
@@ -103,10 +103,15 @@ io.on('connection', function (socket) {
 
 	console.log(`got a new connection with id ${socket.id} as user ${username} to session ${joinid}`);
 
+	if (!roomExists(joinid)) {
+		// Room does not exist anymore, invalidate the id so a new session gets created instead
+		joinid = null
+	}
+
 	if (!username) {
 		closeSession(socket, 'need to define username');
 	} else if (joinid) {
-		joinRoomIfExists(socket, joinid);
+		joinRoom(socket, joinid);
 	} else {
 		createAndJoinRoomIfMaxRoomsNotReached(socket);
 	}

@@ -16,18 +16,18 @@ export class SocketService {
             console.error('Server closed socket:', message)
         })
 
-        if (sessionId == '') {
-            this.socket.on('created', message => {
-                this.sessionId = message.sessionId
-                this.eventEmitter.emit('sessionCreated', this.sessionId)
-            })
-        }
-        else {
-            this.sessionId = sessionId
-        }
+        this.sessionId = sessionId
+        this.socket.on('created', message => {
+            if (this.sessionId != null) {
+                // TODO: Show message that a new session was created because the old one expired
+            }
+            this.sessionId = message.sessionId
+            this.eventEmitter.emit('sessionCreated', this.sessionId)
+        })
     }
 
     /**
+     * This event is only fired if there was no session id provided or the provided session id was invalid
      * @param {sessionCreated} listener Listener that is fired when a new session has been created
      */
     onSessionCreated(listener) {
