@@ -10,16 +10,17 @@ const max_rooms = 2000
 
 const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/'
 
-var server = undefined
+const server = createServer()
 
-if (env === 'production') {
-	server = https.createServer({
-		key: readFileSync(certpath + 'privkey.pem'),	
-		cert: readFileSync(certpath + 'fullchain.pem'),	
-		ca: readFileSync(certpath + 'chain.pem'),	
-	})
-} else {
-	server = http.createServer()
+function createServer() {
+	if (env === 'production') {
+		return https.createServer({
+			key: readFileSync(certpath + 'privkey.pem'),	
+			cert: readFileSync(certpath + 'fullchain.pem'),	
+			ca: readFileSync(certpath + 'chain.pem'),	
+		})
+	} else
+		return http.createServer()
 }
 	
 server.listen(port, function () {
