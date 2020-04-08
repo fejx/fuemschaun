@@ -11,6 +11,7 @@ const max_rooms = 2000
 const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/'
 
 const server = createServer()
+const io = socketio(server)
 
 function createServer() {
 	if (env === 'production') {
@@ -26,8 +27,6 @@ function createServer() {
 server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
-
-var io = socketio(server)
 
 let existing_rooms = {}
 
