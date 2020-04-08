@@ -1,7 +1,8 @@
-'use strict'
-
-var uuid = require('uuid')
-var fs = require('fs')
+import uuid from 'uuid'
+import { readFileSync } from 'fs'
+import http from 'http'
+import https from 'https'
+import socketio from 'socket.io'
 
 const port = process.env.PORT || 8889
 const env = process.env.NODE_ENV || 'dev'
@@ -12,14 +13,12 @@ const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoerm
 var server = undefined
 
 if (env === 'production') {
-	var https = require('https')
 	server = https.createServer({
-		key: fs.readFileSync(certpath + 'privkey.pem'),	
-		cert: fs.readFileSync(certpath + 'fullchain.pem'),	
-		ca: fs.readFileSync(certpath + 'chain.pem'),	
+		key: readFileSync(certpath + 'privkey.pem'),	
+		cert: readFileSync(certpath + 'fullchain.pem'),	
+		ca: readFileSync(certpath + 'chain.pem'),	
 	})
 } else {
-	var http = require('http')
 	server = http.createServer()
 }
 	
@@ -27,7 +26,7 @@ server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
 
-var io = require('socket.io')(server)
+var io = socketio(server)
 
 let existing_rooms = {}
 

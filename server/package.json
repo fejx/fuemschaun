@@ -2,9 +2,9 @@
   "name": "fuemschaun.backend",
   "version": "0.0.1",
   "description": "Backend for fuemschaun",
-  "main": "fuemschaun.js",
+  "main": "fuemschaun.mjs",
   "scripts": {
-    "start": "node fuemschaun.js",
+    "start": "node fuemschaun.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
