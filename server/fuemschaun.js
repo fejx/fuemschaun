@@ -1,3 +1,5 @@
+'use strict'
+
 var uuid = require('uuid')
 var fs = require('fs')
 
@@ -64,13 +66,13 @@ function removeFromRoom(socket) {
 	})
 }
 
-function createAndJoinRoomIfMaxRoomsNotReached(socket) {
+function createAndJoinRoomIfMaxRoomsNotReached(socket, username) {
 	if (Object.keys(existing_rooms) > max_rooms) {
 		closeSession(socket, 'maximum numbers of parties reached')
 	} else {
-		dict = {}
+		const dict = {}
 		dict[socket.id] = username
-		sessionId = uuid.v4()
+		const sessionId = uuid.v4()
 		socket.join(sessionId)
 		existing_rooms[sessionId] = dict
 		socket.emit('created', {
@@ -96,8 +98,8 @@ function joinRoom(socket, joinid) {
 }
 
 io.on('connection', function (socket) {
-	username = socket.handshake.query.username
-	joinid = socket.handshake.query.joinid
+	const username = socket.handshake.query.username
+	let joinid = socket.handshake.query.joinid
 
 	console.log(`got a new connection with id ${socket.id} as user ${username} to session ${joinid}`)
 
@@ -111,7 +113,7 @@ io.on('connection', function (socket) {
 	} else if (joinid) {
 		joinRoom(socket, joinid)
 	} else {
-		createAndJoinRoomIfMaxRoomsNotReached(socket)
+		createAndJoinRoomIfMaxRoomsNotReached(socket, username)
 	}
 
 	socket.on('disconnecting', function() {
