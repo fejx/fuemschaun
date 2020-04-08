@@ -16,122 +16,97 @@ const io = socketio(server)
 function createServer() {
 	if (env === 'production') {
 		return https.createServer({
-			key: readFileSync(certpath + 'privkey.pem'),	
-			cert: readFileSync(certpath + 'fullchain.pem'),	
-			ca: readFileSync(certpath + 'chain.pem'),	
+			key: readFileSync(certpath + 'privkey.pem'),
+			cert: readFileSync(certpath + 'fullchain.pem'),
+			ca: readFileSync(certpath + 'chain.pem'),
 		})
 	} else
 		return http.createServer()
 }
-	
+
 server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
 
-const existingRooms = {}
-
-function closeSession(socket, message = false) {
-	socket.emit('disconnect', message ? message : 'sessionId ' + socket.id + ' does not exist')
-	socket.disconnect()
-}
-
-function trySendingToReceivers(socket, event, data) {
-	const targetRoom = Object.keys(socket.rooms)[1]
-	console.log('got a ' + event + ' event on ' + targetRoom + ' with the message ' + JSON.stringify(data))
-	socket.broadcast.to(targetRoom).emit(event, data)
-}
-
-function deleteRoomIfEmpty(targetRoom) {
-	if (Object.keys(existingRooms[targetRoom]).length < 1) {
-		console.log('deleting room ' + targetRoom + ' because no participants are left')
-		delete existingRooms[targetRoom]
-	}
-}
-
-function removeFromRoom(socket) {
-	const targetRoom = Object.keys(socket.rooms)[1]
-	console.log('got a disconnect on room ', targetRoom)
-	let username = undefined
-	for (let member of Object.keys(existingRooms[targetRoom])) {
-		if (member == socket.id) {
-			username = existingRooms[targetRoom][member]
-			delete existingRooms[targetRoom][member]
-		}
-	}
-	deleteRoomIfEmpty(targetRoom)
-	io.to(targetRoom).emit('leave', {
-		name: username,
-		message: 'user ' + username + ' left the session'
-	})
-}
-
-function createAndJoinRoomIfMaxRoomsNotReached(socket, username) {
-	if (Object.keys(existingRooms) > maxRooms) {
-		closeSession(socket, 'maximum numbers of parties reached')
-	} else {
-		const dict = {}
-		dict[socket.id] = username
-		const sessionId = uuid.v4()
-		socket.join(sessionId)
-		existingRooms[sessionId] = dict
-		socket.emit('created', {
-			sessionId: sessionId,
-			message: 'session does not exist, created new with id ' + sessionId
-		})
-		console.log('created room ' + sessionId)
-	}
-}
-
-function roomExists(sessionId) {
-	return sessionId in existingRooms
-}
-
-function joinRoom(socket, joinid) {
-	existingRooms[joinid][socket.id] = username
-	socket.join(joinid)
-	io.to(joinid).emit('joined', {
-		name: username,
-		message: username + ' joined the session'
-	})
-	console.log(username + ' joined session ' + joinid)
-}
-
 io.on('connection', function (socket) {
-	const username = socket.handshake.query.username
-	let joinid = socket.handshake.query.joinid
+	console.debug(`New connection with id ${socket.id}, with parameters '${JSON.stringify(socket.handshake.query)}'`)
 
-	console.log(`got a new connection with id ${socket.id} as user ${username} to session ${joinid}`)
-
-	if (!roomExists(joinid)) {
-		// Room does not exist anymore, invalidate the id so a new session gets created instead
-		joinid = null
+	socket.alias = socket.handshake.query.username
+	if (!socket.alias) {
+		socket.emit('disconnect', 'Missing username')
+		socket.disconnect()
+		return
 	}
 
-	if (!username) {
-		closeSession(socket, 'need to define username')
-	} else if (joinid) {
-		joinRoom(socket, joinid)
-	} else {
-		createAndJoinRoomIfMaxRoomsNotReached(socket, username)
-	}
+	const roomId = determineRoomId(socket)
+	joinRoom(socket, roomId)
 
-	socket.on('disconnecting', function() {
-		removeFromRoom(socket)
+	socket.on('disconnecting', function () {
+		console.debug(`Connection with id ${socket.id} left (alias: ${socket.alias}, room: ${socket.roomId})`)
+		socket.broadcast.to(roomId).emit('leave', {
+			name: socket.alias,
+			message: `${socket.alias} left`
+		})
 	})
 
 	createListenersFor(socket)
 })
 
+function determineRoomId(socket) {
+	const requestedRoom = socket.handshake.query.joinid
+	const hasRequest = requestedRoom != null
+	if (hasRequest && roomExists(requestedRoom)) {
+		return requestedRoom
+	}
+	else {
+		// No room requested or room does not exist anymore
+		const newRoomId = getNewRoomId()
+		socket.emit('created', {
+			sessionId: newRoomId,
+		})
+		return newRoomId
+	}
+}
+
+function joinRoom(socket, roomId) {
+	socket.join(roomId)
+	socket.roomId = roomId
+	socket.broadcast.to(roomId).emit('joined', {
+		name: socket.alias,
+		message: `${socket.alias} joined`
+	})
+	console.debug(`${socket.alias} joined ${roomId}`)
+}
+
+function getNewRoomId() {
+	checkIfRoomCapReached()
+	return uuid.v4()
+}
+
+function checkIfRoomCapReached() {
+	// TODO
+}
+
 function createListenersFor(socket) {
 	socket.on('playback-position', function (data) {
-		trySendingToReceivers(socket, 'playback-position', { position: data.position })
+		sendToPeers(socket, 'playback-position', { position: data.position })
 	})
 
 	socket.on('playback-status', function (data) {
-		trySendingToReceivers(socket, 'play', { playing: data.playing })
+		sendToPeers(socket, 'play', { playing: data.playing })
 	})
 
 	socket.on('buffering', function () {
-		trySendingToReceivers(socket, 'buffering', { buffering: true })
+		sendToPeers(socket, 'buffering', { buffering: true })
 	})
+}
+
+function sendToPeers(socket, event, data) {
+	const roomId = socket.roomId
+	console.debug(`${socket.alias} broadcasts event ${event}: ${JSON.stringify(data)}`)
+	socket.broadcast.to(roomId).emit(event, data)
+}
+
+function roomExists(roomId) {
+	return io.sockets.adapter.rooms[roomId] != null
 }
