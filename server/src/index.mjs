@@ -119,6 +119,10 @@ io.on('connection', function (socket) {
 		removeFromRoom(socket)
 	})
 
+	createListenersFor(socket)
+})
+
+function createListenersFor(socket) {
 	socket.on('playback-position', function (data) {
 		trySendingToReceivers(socket, 'playback-position', { position: data.position })
 	})
@@ -130,4 +134,4 @@ io.on('connection', function (socket) {
 	socket.on('buffering', function () {
 		trySendingToReceivers(socket, 'buffering', { buffering: true })
 	})
-})
+}
