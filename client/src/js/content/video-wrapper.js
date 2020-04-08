@@ -5,9 +5,11 @@ export class VideoWrapper {
         this.element = element
         this.eventEmitter = new EventEmitter()
         this.shouldSkipNextEvent = false
+        this.isPlaying = this.element.autoplay
 
         this.element.addEventListener('pause', () => {
             console.info('pause event fired')
+            this.isPlaying = false
             const currentTime = this.element.currentTime
             if (this.isBuffering(this.element.buffered, currentTime)) {
                 console.info('is buffering')
@@ -19,10 +21,12 @@ export class VideoWrapper {
         })
         this.element.addEventListener('play', () => {
             console.info('play event fired')
+            this.isPlaying = true
             this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
         })
         this.element.addEventListener('seeked', () => {
             console.info('seeked event fired')
+            this.isPlaying = true
             this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
         })
     }
@@ -63,6 +67,14 @@ export class VideoWrapper {
 
     onPositionChanged(listener) {
         this.eventEmitter.on('positionChanged', listener)
+    }
+
+    getPosition() {
+        return this.element.currentTime
+    }
+
+    getIsPlaying() {
+        return this.isPlaying
     }
 
     isBuffering() {

@@ -49,6 +49,13 @@ function announceFound(element) {
             else
                 wrapper.play()
         })
+        service.onStateRequested(() => {
+            return {
+                position: wrapper.getPosition(),
+                isPlaying: wrapper.isPlaying,
+                createdAt: Date.now()
+            }
+        })
     })
 }
 

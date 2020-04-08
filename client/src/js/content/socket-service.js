@@ -104,6 +104,20 @@ export class SocketService {
      */
 
     /**
+     * @param {stateRequested} listener 
+     */
+    onStateRequested(listener) {
+        this.socket.on('state-update', () => {
+            const state = listener()
+            this.socket.emit('state-update', state)
+        })
+    }
+    /**
+     * @callback stateRequested
+     * @returns {object} Object containing information about the current state
+     */
+
+    /**
      * Announce a playback change to the peers
      * @param {number} newPosition New playback position
      */
