@@ -1,6 +1,4 @@
-var express = require('express')
 var uuid = require('uuid')
-var app = express()
 var fs = require('fs')
 
 const port = process.env.PORT || 8889
