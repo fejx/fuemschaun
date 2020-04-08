@@ -36,7 +36,7 @@ function closeSession(socket, message = false) {
 }
 
 function trySendingToReceivers(socket, event, data) {
-	targetRoom = Object.keys(socket.rooms)[1]
+	const targetRoom = Object.keys(socket.rooms)[1]
 	console.log('got a ' + event + ' event on ' + targetRoom + ' with the message ' + JSON.stringify(data))
 	socket.broadcast.to(targetRoom).emit(event, data)
 }
@@ -49,7 +49,7 @@ function deleteRoomIfEmpty(targetRoom) {
 }
 
 function removeFromRoom(socket) {
-	targetRoom = Object.keys(socket.rooms)[1]
+	const targetRoom = Object.keys(socket.rooms)[1]
 	console.log('got a disconnect on room ', targetRoom)
 	let username = undefined
 	for (let member of Object.keys(existingRooms[targetRoom])) {
