@@ -1,6 +1,7 @@
 import * as elementFinder from "./content/element-finder"
 import * as connectForm from './content/show-connect-form'
 import * as urlManip from './content/url-manipulation'
+import * as message from './content/message-feed'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 
@@ -43,7 +44,7 @@ function announceFound(element) {
             wrapper.jumpTo(newPosition)
         })
         service.onBuffering(isBuffering => {
-            // TODO: Show message in feed
+            message.info('Someone is buffering')
             if (isBuffering)
                 wrapper.pause()
             else

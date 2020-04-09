@@ -1,4 +1,5 @@
 import * as io from 'socket.io-client'
+import * as message from './content/message-feed'
 import { EventEmitter } from 'events'
 
 export class SocketService {
@@ -18,9 +19,8 @@ export class SocketService {
 
         this.sessionId = sessionId
         this.socket.on('created', message => {
-            if (this.sessionId != null) {
-                // TODO: Show message that a new session was created because the old one expired
-            }
+            if (this.sessionId != null)
+                message.info('New session because the old one expired')
             this.sessionId = message.sessionId
             this.eventEmitter.emit('sessionCreated', this.sessionId)
         })
