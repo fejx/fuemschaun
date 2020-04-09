@@ -114,7 +114,27 @@ export class SocketService {
     }
     /**
      * @callback stateRequested
-     * @returns {object} Object containing information about the current state
+     * @returns {State} Object containing information about the current state
+     */
+    /**
+     * @typedef {Object} State
+     * @property {number} position
+     * @property {boolean} isPlaying
+     * @property {Date} createdAt
+     */
+
+    /**
+     * This event is fired after connecting. If there is only one connection, it is not fired.
+     * @param {initialState} listener 
+     */
+    onInitialState(listener) {
+        this.socket.on('initial-state', state => {
+            listener(state)
+        })
+    }
+    /**
+     * @callback initialState
+     * @param {State} state The current state of the peers
      */
 
     /**
