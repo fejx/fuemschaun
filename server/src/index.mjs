@@ -48,6 +48,7 @@ io.on('connection', function (socket) {
 
 	const roomId = determineRoomId(socket)
 	joinRoom(socket, roomId)
+	sendCurrentStateFromPeer(socket)
 
 	socket.on('disconnecting', function () {
 		console.debug(`Connection with id ${socket.id} left (alias: ${socket.alias}, room: ${socket.roomId})`)
@@ -104,6 +105,29 @@ function sendToPeers(socket, event, data) {
 	const roomId = socket.roomId
 	console.debug(`${socket.alias} broadcasts event ${event}: ${JSON.stringify(data)}`)
 	socket.broadcast.to(roomId).emit(event, data)
+}
+
+function sendCurrentStateFromPeer(socket) {
+	const peer = findPeerFor(socket)
+	if (peer == null) {
+		// If no peer is found, no state has to be shared anyways
+		return
+	}
+	peer.emit('state-update')
+	peer.once('state-update', state => {
+		socket.emit('initial-state', state)
+	})
+}
+
+function findPeerFor(socket) {
+	const roomId = socket.roomId
+	const socketsInRoom = io.sockets.adapter.rooms[roomId].sockets
+	const socketList = Object.keys(socketsInRoom)
+	const peerId = socketList.find(p => p.id != socket.id)
+	if (peerId == null)
+		return null
+	else
+		return io.sockets.sockets[peerId]
 }
 
 function roomExists(roomId) {

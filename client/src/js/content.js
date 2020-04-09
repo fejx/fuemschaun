@@ -56,6 +56,14 @@ function announceFound(element) {
                 createdAt: Date.now()
             }
         })
+        service.onInitialState(state => {
+            // TODO: Calculate position offset using createAt property
+            wrapper.jumpTo(state.position)
+            if (state.isPlaying)
+                wrapper.play()
+            else
+                wrapper.pause()
+        })
     })
 }
 
