@@ -72,10 +72,6 @@ function findMatchingElementIn(nodes, tagName, predicate) {
     return findMatchingElementIn(children, tagName, predicate)
 }
 
-function announceVideoElementFound(element) {
-    console.log('Found video element', element)
-}
-
 function isOfTag(node, tagName) {
     const name = node.tagName
     if (name == null)
