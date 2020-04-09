@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events'
 
+import * as message from './message-feed'
+
 export class VideoWrapper {
     constructor(element) {
         this.element = element
@@ -8,24 +10,23 @@ export class VideoWrapper {
         this.isPlaying = this.element.autoplay
 
         this.element.addEventListener('pause', () => {
-            console.info('pause event fired')
             this.isPlaying = false
             const currentTime = this.element.currentTime
             if (this.isBuffering(this.element.buffered, currentTime)) {
-                console.info('is buffering')
+                message.debug('Detected buffering')
                 this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
             } else {
-                console.info('user paused')
+                message.debug('Detected pause')
                 this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
             }
         })
         this.element.addEventListener('play', () => {
-            console.info('play event fired')
+            message.debug('Detected play')
             this.isPlaying = true
             this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
         })
         this.element.addEventListener('seeked', () => {
-            console.info('seeked event fired')
+            message.debug('Detected seeked')
             this.isPlaying = true
             this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
         })

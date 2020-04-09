@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client'
-import * as message from './content/message-feed'
+import * as message from './message-feed'
 import { EventEmitter } from 'events'
 
 export class SocketService {
@@ -14,7 +14,7 @@ export class SocketService {
         })
 
         this.socket.on('disconnect', message => {
-            console.error('Server closed socket:', message)
+            message.error('Connection lost: ', message)
         })
 
         this.sessionId = sessionId
