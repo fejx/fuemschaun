@@ -4,9 +4,11 @@ import http from 'http'
 import https from 'https'
 import socketio from 'socket.io'
 
+import { limitTo } from './clientLimiter.mjs'
+
 const port = process.env.PORT || 8889
 const env = process.env.NODE_ENV || 'dev'
-const maxRooms = 2000
+const maxClients = 3000
 
 const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/'
 
@@ -28,7 +30,13 @@ server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
 
+limitTo(io, maxClients)
+
 io.on('connection', function (socket) {
+	// This check is required because the socket might have been rejected by the client limiter
+	if (!socket.connected)
+		return
+
 	console.debug(`New connection with id ${socket.id}, with parameters '${JSON.stringify(socket.handshake.query)}'`)
 
 	socket.alias = socket.handshake.query.username
@@ -78,15 +86,6 @@ function joinRoom(socket, roomId) {
 	console.debug(`${socket.alias} joined ${roomId}`)
 }
 
-function getNewRoomId() {
-	checkIfRoomCapReached()
-	return uuid.v4()
-}
-
-function checkIfRoomCapReached() {
-	// TODO
-}
-
 function createListenersFor(socket) {
 	socket.on('playback-position', function (data) {
 		sendToPeers(socket, 'playback-position', { position: data.position })
@@ -109,4 +108,8 @@ function sendToPeers(socket, event, data) {
 
 function roomExists(roomId) {
 	return io.sockets.adapter.rooms[roomId] != null
+}
+
+function getNewRoomId() {
+	return uuid.v4()
 }
