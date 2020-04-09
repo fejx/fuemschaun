@@ -1,6 +1,6 @@
 import * as elementFinder from "./content/element-finder"
 import * as connectForm from './content/show-connect-form'
-import * as urlManip from './content/urlManipulation'
+import * as urlManip from './content/url-manipulation'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 
