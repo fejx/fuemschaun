@@ -1,6 +1,5 @@
-FILE=fuemschaun.js
 TARGET=/var/log/fuemschaun/nodejs
-PID := `ps -aux | grep "[f]uemschaun.js" | awk '{print $$2}'`
+PID := `ps -aux | grep "[s]rc/index.mjs" | awk '{print $$2}'`
 
 .PHONY: install
 
@@ -9,7 +8,7 @@ install:
 
 
 prod: kill
-	NODE_ENV=production nohup node $(FILE) >> $(TARGET) 2>&1 &
+	NODE_ENV=production nohup npm run start >> $(TARGET) 2>&1 &
 
 kill:
 	@if [ "$(strip $(PID))" != "" ]; then \
@@ -18,4 +17,4 @@ kill:
 	fi
 
 dev:
-	node $(FILE)
+	npm run start
