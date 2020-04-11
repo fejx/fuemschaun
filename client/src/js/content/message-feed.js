@@ -1,76 +1,60 @@
 /**
- * @enum {number}
+ * @enum {string}
  */
-export const level = {
-    DEBUG: 0,
-    INFO: 1,
-    WARNING: 2,
-    ERROR: 4
+export const messageType = {
+    info: 'info',
+    success: 'success',
+    warning: 'warning',
+    error: 'error'
 }
 
 /**
  * @param {string} message 
  */
-export function debug(message, ...objects) {
-    show(level.DEBUG, message, ...objects)
+export function info(message) {
+    show(messageType.info, message)
 }
 
 /**
  * @param {string} message 
  */
-export function info(message, ...objects) {
-    show(level.INFO, message, ...objects)
+export function success(message) {
+    show(messageType.success, message)
 }
 
 /**
  * @param {string} message 
  */
-export function warning(message, ...objects) {
-    show(level.WARNING, message, ...objects)
+export function warning(message) {
+    show(messageType.warning, message)
 }
 
 /**
  * @param {string} message 
  */
-export function error(message, ...objects) {
-    show(level.ERROR, message, ...objects)
+export function error(message) {
+    show(messageType.error, message)
 }
 
 /**
- * @param {level} level 
+ * @param {messageType} type 
  * @param {string} message 
  */
-export function show(level, message, ...objects) {
-    if (shouldNotShow(level))
-        return
-    consoleLogAccordingTo(level, message, objects)
+export function show(type, message) {
+    consoleLogAccordingTo(type, message)
 }
 
-function consoleLogAccordingTo(level, message, objects) {
-    switch (level) {
-        case 0:
-            console.debug(message, ...objects)
+function consoleLogAccordingTo(type, message) {
+    switch(type) {
+        case messageType.info:
+        case messageType.success:
+            console.info(message)
             return
-        case 1:
-            console.info(message, ...objects)
+        case messageType.warning:
+            console.warn(message)
             return
-        case 2:
-            console.warn(message, ...objects)
-            return
-        case 3:
-            console.error(message, ...objects)
-            console.trace()
-            return
-        default:
-            console.log(message, ...objects)
+        case messageType.error:
+            console.error(message)
             return
     }
-}
-
-function shouldNotShow(level) {
-    return !shouldShow(level)
-}
-
-function shouldShow(level) {
-    return level >= CONFIG.messageLevel
 }
