@@ -1,40 +1,17 @@
 const WAIT_TIMEOUT_MS = 10 * 1000
 
-window.browser = (function () {
-    return window.msBrowser ||
-        window.browser ||
-        window.chrome
-})()
-
-getOrWaitForElement('video', isValidVideo)
-    .then(announceFound)
-    .catch(announceNotFound)
-
-function announceFound(element) {
-    console.log('Found', element)
-    const message = {
-        name: 'video-element-found',
-        found: true
-    }
-    browser.runtime.sendMessage(message)
+/**
+ * 
+ * @param tagName {string} Name of the tag that the matching element should have (used to speed up initial search in the document).
+ * @param predicate {nodePredicate} Predicate that should be fulfilled for the element.
+ */
+export function getOrWaitForElement(tagName, predicate) {
+    const element = findElement(tagName, predicate)
+    if (element != null)
+        return instantResolvePromise(element)
+    // No matching element found on page, waiting for one to appear
+    return waitForElement(tagName, predicate)
 }
-
-function announceNotFound(error) {
-    console.error('Not found', error)
-    const message = {
-        name: 'video-element-found',
-        found: false,
-        reason: error
-    }
-    browser.runtime.sendMessage(message)
-}
-
-function isValidVideo(node) {
-    // TODO: Check for duration
-    return true
-}
-
-
 
 /**
  * Predicate for a node
@@ -42,19 +19,6 @@ function isValidVideo(node) {
  * @param {Node} node
  * @returns {boolean} true if the node matches the predicate
  */
-
-/**
- * 
- * @param tagName {string} Name of the tag that the matching element should have (used to speed up initial search in the document).
- * @param predicate {nodePredicate} Predicate that should be fulfilled for the element.
- */
-function getOrWaitForElement(tagName, predicate) {
-    const element = findElement(tagName, predicate)
-    if (element != null)
-        return instantResolvePromise(element)
-    // No matching element found on page, waiting for one to appear
-    return waitForElement(tagName, predicate)
-}
 
 function findElement(tagName, predicate) {
     const elements = document.getElementsByTagName(tagName)
@@ -106,10 +70,6 @@ function findMatchingElementIn(nodes, tagName, predicate) {
         return firstLevel
     const children = nodes.flatMap(node => indexableToArray(node.childNodes))
     return findMatchingElementIn(children, tagName, predicate)
-}
-
-function announceVideoElementFound(element) {
-    console.log('Found video element', element)
 }
 
 function isOfTag(node, tagName) {

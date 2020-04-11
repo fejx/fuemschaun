@@ -1,0 +1,30 @@
+{
+  "name": "Fümschaun",
+  "options_page": "options.html",
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "19": "icon/icon20.png",
+      "20": "icon/icon20.png",
+      "38": "icon/icon38.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.bundle.js"
+      ]
+    }
+  ],
+  "icons": {
+    "48": "icon/icon38.png"
+  },
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
