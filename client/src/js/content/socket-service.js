@@ -13,8 +13,20 @@ export class SocketService {
             }
         })
 
+        this.socket.on('connect', () => {
+            feed.success('Connected')
+        })
+
         this.socket.on('disconnect', message => {
-            feed.error('Connection lost: ', message)
+            feed.warning('Connection lost: ', message)
+        })
+
+        this.socket.on('reconnecting', attempt => {
+            feed.warning(`Reconnecting (attempt ${attempt})...`)
+        })
+
+        this.socket.on('reconnect_failed', () => {
+            feed.error('Could not reconnect')
         })
 
         this.sessionId = sessionId
