@@ -24,17 +24,24 @@ function createForm(onConnectClick) {
         e.addEventListener('click', () => removeForm())
     })
 
+    const confirmAction = () => {
+        // TODO: Check if the username is valid
+        onConnectClick(usernameInput.value)
+        removeForm()
+    }
+
     const usernameInput = appendNewElement(container, 'input', e => {
         e.placeholder = 'Username'
+        e.addEventListener('keypress', event => {
+            if (event.charCode != 13) // Enter key
+                return
+            confirmAction()
+        })
     })
 
     const createSessionButton = appendNewElement(container, 'button', e => {
         e.textContent = 'Create Session'
-        e.addEventListener('click', () => {
-            // TODO: Check if the username is valid
-            onConnectClick(usernameInput.value)
-            removeForm()
-        })
+        e.addEventListener('click', confirmAction)
     })
 
     return container
