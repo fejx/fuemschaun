@@ -13,6 +13,7 @@
     "config-webpack": "^1.0.4",
     "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^7.0.2",
+    "crx": "^5.0.1",
     "css-loader": "^3.4.2",
     "file-loader": "^6.0.0",
     "fs-extra": "^9.0.0",
