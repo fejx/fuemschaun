@@ -7,25 +7,28 @@ const ChromeExtension = require('crx')
 const keyPath = './secrets/key.pem'
 const distDir = './dist'
 
-assertKeyFile()
-clean()
+module.exports = (sourceDir) => {
+    assertKeyFile()
+    clean()
 
-const crx = new ChromeExtension({
-    codebase: 'http://localhost:8000/myExtension.crx',
-    privateKey: fs.readFileSync(keyPath)
-})
-
-crx.load('./build')
-    .then(crx => crx.pack())
-    .then(crxBuffer => {
-        const updateXml = crx.generateUpdateXML()
-
-        writeToDist('update.xml', updateXml)
-        writeToDist('fuemschaun.crx', crxBuffer)
+    const crx = new ChromeExtension({
+        codebase: 'http://localhost:8000/myExtension.crx',
+        privateKey: fs.readFileSync(keyPath)
     })
-    .catch(err => {
-        console.error(err)
-    })
+
+    crx.load(sourceDir)
+        .then(crx => crx.pack())
+        .then(crxBuffer => {
+            const updateXml = crx.generateUpdateXML()
+
+            writeToDist('update.xml', updateXml)
+            writeToDist('fuemschaun.crx', crxBuffer)
+            console.info(`Saved crx file in ${distDir}`)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+}
 
 function clean() {
     if (fs.existsSync(distDir))

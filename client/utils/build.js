@@ -1,9 +1,17 @@
-var webpack = require("webpack"),
-    config = require("../webpack.config");
+const
+  package = require('./package.js'),
+  webpack = require('webpack'),
+  config = require("../webpack.config")
 
-delete config.chromeExtensionBoilerplate;
+delete config.chromeExtensionBoilerplate
+
+console.info('Building...')
 
 webpack(
   config,
   function (err) { if (err) throw err; }
-);
+)
+
+console.info('Packaging to crx...')
+
+package(config.output.path)
