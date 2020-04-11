@@ -1,0 +1,8 @@
+{
+    "certificate": {
+        "basePath": "/etc/letsencrypt/live/fuemschaun.hoermannpaul.com",
+        "keyFile": "privkey.pem",
+        "chainFile": "fullchain.pem",
+        "overrideCa": "chain.pem"
+    }
+}

@@ -1,36 +1,20 @@
 import uuid from 'uuid'
-import { readFileSync } from 'fs'
-import http from 'http'
-import https from 'https'
 import socketio from 'socket.io'
+import config from 'config'
 
-import { limitTo } from './clientLimiter.mjs'
+import { limitClients } from './clientLimiter.mjs'
+import { createServer } from './serverSetup.mjs'
 
-const port = process.env.PORT || 8889
-const env = process.env.NODE_ENV || 'dev'
-const maxClients = 3000
-
-const certpath = process.env.CERTPATH || '/etc/letsencrypt/live/fuemschaun.hoermannpaul.com/'
+const port = process.env.PORT || config.get('port')
 
 const server = createServer()
 const io = socketio(server)
-
-function createServer() {
-	if (env === 'production') {
-		return https.createServer({
-			key: readFileSync(certpath + 'privkey.pem'),
-			cert: readFileSync(certpath + 'fullchain.pem'),
-			ca: readFileSync(certpath + 'chain.pem'),
-		})
-	} else
-		return http.createServer()
-}
 
 server.listen(port, function () {
 	console.log('webserver listens on port ', port)
 })
 
-limitTo(io, maxClients)
+limitClients(io)
 
 io.on('connection', function (socket) {
 	// This check is required because the socket might have been rejected by the client limiter

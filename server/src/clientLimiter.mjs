@@ -1,10 +1,12 @@
 import socketio from 'socket.io'
+import config from 'config'
+
+const clientCap = config.get('maximumClients')
 
 /**
  * @param io {socketio.Server}
- * @param clientCap {number} max number of clients
  */
-export function limitTo(io, clientCap) {
+export function limitClients(io) {
     let numberOfClients = 0
     io.on('connection', socket => {
         if (numberOfClients >= clientCap)
