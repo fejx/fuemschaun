@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client'
-import * as message from './message-feed'
+import * as feed from './message-feed'
 import { EventEmitter } from 'events'
 
 export class SocketService {
@@ -14,13 +14,13 @@ export class SocketService {
         })
 
         this.socket.on('disconnect', message => {
-            message.error('Connection lost: ', message)
+            feed.error('Connection lost: ', message)
         })
 
         this.sessionId = sessionId
         this.socket.on('created', message => {
             if (this.sessionId != null)
-                message.info('New session because the old one expired')
+                feed.info('New session because the old one expired')
             this.sessionId = message.sessionId
             this.eventEmitter.emit('sessionCreated', this.sessionId)
         })

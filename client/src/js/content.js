@@ -1,7 +1,7 @@
 import * as elementFinder from "./content/element-finder"
 import * as connectForm from './content/show-connect-form'
 import * as urlManip from './content/url-manipulation'
-import * as message from './content/message-feed'
+import * as feed from './content/message-feed'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 
@@ -18,7 +18,7 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 function announceFound(element) {
     connectForm.showConnectForm(username => {
         const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
-        message.debug(`Connecting to '${sessionId}' as '${username}'`)
+        feed.debug(`Connecting to '${sessionId}' as '${username}'`)
         const service = new SocketService(username, sessionId)
         service.onSessionCreated(sessionId => {
             urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
@@ -44,7 +44,7 @@ function announceFound(element) {
             wrapper.jumpTo(newPosition)
         })
         service.onBuffering(isBuffering => {
-            message.info('Someone is buffering')
+            feed.info('Someone is buffering')
             if (isBuffering)
                 wrapper.pause()
             else
@@ -69,7 +69,7 @@ function announceFound(element) {
 }
 
 function announceNotFound(error) {
-    message.debug('No video element found', error)
+    feed.debug('No video element found', error)
 }
 
 function isValidVideo(node) {
