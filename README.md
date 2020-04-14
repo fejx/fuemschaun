@@ -60,8 +60,9 @@ For active development, see the section [Running for development](#running-for-d
 
 1. If not done already, install [Node.js using these instructions](docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 2. `cd server`
-3. `npm start`
-4. Done!
+3. `npm i`
+4. `npm start`
+5. Done!
 
 ## Running for development
 
@@ -72,17 +73,19 @@ For a production distribution, see the section [Building for production](#buildi
 
 1. If not done already, install [Node.js using these instructions](docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 2. `cd client`
-3. `npm run dev`
-4. Load the extension in Chrome/Chromium.
+3. `npm i`
+4. `npm run dev`
+5. Load the extension in Chrome/Chromium.
     1. Navigate to `chrome://extensions`.
     2. Enable developer mode (top right corner).
     3. Click "Load unpacked"
     4. Navigate to `client/build`
-5. Done! When you change the code, webpack automatically rebuilds the updated module. However, the extension has to be reloaded manually in Chrome as of now (see [#23](https://github.com/fejx/fuemschaun/issues/23) for updates on this issue).
+6. Done! When you change the code, webpack automatically rebuilds the updated module. However, the extension has to be reloaded manually in Chrome as of now (see [#23](https://github.com/fejx/fuemschaun/issues/23) for updates on this issue).
 
 ### How to run the server for development
 
 1. If not done already, install [Node.js using these instructions](docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 2. `cd server`
-3. `npm run dev`
-4. Done!
+3. `npm i`
+4. `npm run dev`
+5. Done!
