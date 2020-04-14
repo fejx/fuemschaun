@@ -43,6 +43,11 @@ var options = {
         exclude: /node_modules/
       },
       {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader',
+        exclude: /node_modules/
+      },
+      {
         test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
         loader: 'file-loader?name=[name].[ext]',
         exclude: /node_modules/
