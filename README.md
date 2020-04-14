@@ -18,9 +18,13 @@ Therefore, everyone can be sure to watch the same thing.
 
 ## What does not work (yet)
 
-Fümschaun is still a work in progress. Therefore, expect bugs and rough edges.
+The bare essentials are already functional. However, Fümschaun is still a work in progress.
+To get a feeling on the progress, check out the [Issues](https://github.com/fejx/fuemschaun/issues) or [Projects](https://github.com/fejx/fuemschaun/projects/1) tabs.
+
 Until now, the extension is not published anywhere yet.
 However, building for yourself is very easy (see the [build section](#building-for-production) for instructions).
+Expect bugs and rough edges!
+If you find a bug (or have any questions), [open an issue](https://github.com/fejx/fuemschaun/issues/new).
 
 ## Contribute
 
