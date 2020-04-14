@@ -6,8 +6,5 @@
     "sessionIdQueryParam": "fue-sid",
     "logging": {
         "level": "info"
-    },
-    "elementFinder": {
-        "waitTimeoutMs": 10000
     }
 }

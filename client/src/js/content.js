@@ -17,7 +17,6 @@ log.setDefaultLevel(CONFIG.logging.level)
 
 elementFinder.getOrWaitForElement('video', isValidVideo)
     .then(announceFound)
-    .catch(announceNotFound)
 
 function announceFound(element) {
     connectForm.showConnectForm(username => {
@@ -70,10 +69,6 @@ function announceFound(element) {
                 wrapper.pause()
         })
     })
-}
-
-function announceNotFound(error) {
-    log.debug('No video element found', error)
 }
 
 function isValidVideo(node) {

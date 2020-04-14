@@ -26,23 +26,13 @@ function findElement(tagName, predicate) {
 
 function waitForElement(tagName, predicate) {
     return new Promise((resolve, reject) => {
-        let resolved = false
 
         const stopObserving = observeForNewElements(tagName, element => {
             if (!predicate(element))
                 return
-            resolved = true
             stopObserving()
             resolve(element)
         })
-
-        setTimeout(() => {
-            if (!resolved) {
-                resolved = true
-                stopObserving()
-                reject('Timeout exceeded')
-            }
-        }, CONFIG.elementFinder.waitTimeoutMs)
     })
 }
 
