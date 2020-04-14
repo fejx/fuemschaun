@@ -28,45 +28,52 @@ function waitForElement(tagName, predicate) {
     return new Promise((resolve, reject) => {
         let resolved = false
 
-        const observationConfig = {
-            childList: true,
-            subtree: true
-        }
-
-        const observer = new MutationObserver((mutations, observer) => {
-            const addedNodes = mutations
-                .filter(mutation => mutation.type == 'childList')
-                .flatMap(mutation => indexableToArray(mutation.addedNodes))
-            const matchingElement = findMatchingElementIn(
-                addedNodes, tagName, predicate
-            )
-            if (matchingElement != null) {
-                resolved = true
-                observer.disconnect()
-                resolve(matchingElement)
-            }
+        const stopObserving = observeForNewElements(tagName, element => {
+            if (!predicate(element))
+                return
+            resolved = true
+            stopObserving()
+            resolve(element)
         })
 
         setTimeout(() => {
             if (!resolved) {
                 resolved = true
-                observer.disconnect()
+                stopObserving()
                 reject('Timeout exceeded')
             }
         }, CONFIG.elementFinder.waitTimeoutMs)
-
-        observer.observe(document.body, observationConfig)
     })
 }
 
-function findMatchingElementIn(nodes, tagName, predicate) {
+function observeForNewElements(tagName, foundCallback) {
+    const observationConfig = {
+        childList: true,
+        subtree: true
+    }
+    const observer = new MutationObserver((mutations, observer) => {
+        const addedNodes = mutations
+            .filter(mutation => mutation.type == 'childList')
+            .flatMap(mutation => indexableToArray(mutation.addedNodes))
+        const matchingElement = findMatchingElementIn(
+            addedNodes, tagName
+        )
+        if (matchingElement != null) {
+            foundCallback(matchingElement)
+        }
+    })
+    observer.observe(document.body, observationConfig)
+    return () => { observer.disconnect() }
+}
+
+function findMatchingElementIn(nodes, tagName) {
     if (nodes.length == 0)
         return null
-    const firstLevel = nodes.find(node => isOfTag(node, tagName) && predicate(node))
+    const firstLevel = nodes.find(node => isOfTag(node, tagName))
     if (firstLevel != null)
         return firstLevel
     const children = nodes.flatMap(node => indexableToArray(node.childNodes))
-    return findMatchingElementIn(children, tagName, predicate)
+    return findMatchingElementIn(children, tagName)
 }
 
 function isOfTag(node, tagName) {
