@@ -72,6 +72,40 @@ function announceFound(element) {
 }
 
 function isValidVideo(node) {
-    // TODO: Check for duration
+    if (node.attributes['src'] == null) {
+        log.debug('Rejected because there is no source')
+        return false
+    }
+    if (isHidden(node)) {
+        log.debug('Rejected because it is hidden')
+        return false
+    }
+    if (node.videoHeight < CONFIG.elementFinder.minSize) {
+        log.debug('Rejected because height is too small', node.videoHeight)
+        return false
+    }
+    if (node.videoWidth < CONFIG.elementFinder.minSize) {
+        log.debug('Rejected because width is too small', node.videoWidth)
+        return false
+    }
+    if (isNaN(node.duration)) {
+        log.debug('Rejected because duration is NaN')
+        return false
+    }
+    if (node.duration < CONFIG.elementFinder.minDurationS) {
+        log.debug('Rejected because duration is too short', node.duration)
+        return false
+    }
+    if (node.played.length == 0) {
+        log.debug('Rejected because there are no played ranges')
+        return false
+    }
+    log.debug('Accepted!', node, node.outerHTML)
     return true
+}
+
+// Stolen from https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
+function isHidden(el) {
+    var style = window.getComputedStyle(el);
+    return (style.display === 'none')
 }

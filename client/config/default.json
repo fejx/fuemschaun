@@ -6,5 +6,9 @@
     "sessionIdQueryParam": "fue-sid",
     "logging": {
         "level": "info"
+    },
+    "elementFinder": {
+        "minSize": 5,
+        "minDurationS": 60
     }
 }
