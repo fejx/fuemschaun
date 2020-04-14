@@ -1,4 +1,5 @@
 import './show-connect-form.styl'
+import { appendNewElement } from './html-building-helper'
 
 const CONTAINER_ID = 'fuemschaun-connect-form-container'
 
@@ -52,21 +53,3 @@ function removeForm() {
     const form = document.getElementById(CONTAINER_ID)
     form.remove()
 }
-
-/**
- * @param {HTMLDivElement} container 
- * @param {string} tag 
- * @param {customizerCallback} customizer 
- */
-function appendNewElement(container, tag, customizer) {
-    const newElement = document.createElement(tag)
-    customizer(newElement)
-    container.appendChild(newElement)
-    return newElement
-}
-
-/**
- * Predicate for a node
- * @callback customizerCallback
- * @param {HTMLElement} element
- */
