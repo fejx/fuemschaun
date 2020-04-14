@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/fejx/fuemschaun#readme",
   "dependencies": {
+    "loglevel": "^1.6.7",
     "socket.io-client": "^2.3.0",
     "url-parse": "^1.4.7"
   },
