@@ -5,8 +5,7 @@ import './show-connect-form.css'
  */
 export function showConnectForm(onConnectClick) {
     const form = createForm(onConnectClick)
-    const body = document.getElementsByTagName('body')[0]
-    body.prepend(form)
+    document.body.prepend(form)
 }
 
 /**

@@ -27,7 +27,6 @@ function findElement(tagName, predicate) {
 function waitForElement(tagName, predicate) {
     return new Promise((resolve, reject) => {
         let resolved = false
-        const body = document.getElementsByTagName('body')[0]
 
         const observationConfig = {
             childList: true,
@@ -56,7 +55,7 @@ function waitForElement(tagName, predicate) {
             }
         }, CONFIG.elementFinder.waitTimeoutMs)
 
-        observer.observe(body, observationConfig)
+        observer.observe(document.body, observationConfig)
     })
 }
 
