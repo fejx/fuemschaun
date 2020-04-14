@@ -1,3 +1,5 @@
+import log from 'loglevel'
+
 import * as elementFinder from "./content/element-finder"
 import * as connectForm from './content/show-connect-form'
 import * as urlManip from './content/url-manipulation'
@@ -10,6 +12,8 @@ window.browser = (function () {
         window.browser ||
         window.chrome
 })()
+
+log.setDefaultLevel(CONFIG.logging.level)
 
 elementFinder.getOrWaitForElement('video', isValidVideo)
     .then(announceFound)
