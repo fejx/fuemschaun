@@ -1,3 +1,5 @@
+import log from 'loglevel'
+
 /**
  * 
  * @param tagName {string} Name of the tag that the matching element should have (used to speed up initial search in the document).
@@ -19,20 +21,43 @@ export function getOrWaitForElement(tagName, predicate) {
  */
 
 function findElement(tagName, predicate) {
-    const elements = document.getElementsByTagName(tagName)
-    const elementArray = indexableToArray(elements)
-    return elementArray.find(predicate)
+    return getAllElementsWith(tagName).find(predicate)
 }
 
 function waitForElement(tagName, predicate) {
     return new Promise((resolve, reject) => {
+        let resolved = false
+        const candidateObservers = []
+        const observeWithPredicate = element => {
+            const stopObserving = observeAsCandidate(
+                element,
+                predicate,
+                () => {
+                    resolved = true
+                    stopObservingAll()
+                    resolve(element)
+                }
+            )
+            candidateObservers.push(stopObserving)
+        }
+        const stopObservingAll = () => {
+            stopObservingBody()
+            candidateObservers.forEach(handler => handler())
+        }
 
-        const stopObserving = observeForNewElements(tagName, element => {
-            if (!predicate(element))
-                return
-            stopObserving()
-            resolve(element)
-        })
+        const stopObservingBody = observeForNewElements(
+            tagName,
+            element => {
+                if (predicate(element)) {
+                    resolved = true
+                    stopObservingAll()
+                    resolve(element)
+                } else
+                    observeWithPredicate(element)
+            }
+        )
+
+        getAllElementsWith(tagName).forEach(observeWithPredicate)
     })
 }
 
@@ -56,6 +81,45 @@ function observeForNewElements(tagName, foundCallback) {
     return () => { observer.disconnect() }
 }
 
+function observeAsCandidate(element, predicate, predicateFulfilledCallback) {
+    // log.debug('Found candiate', element.outerHTML)
+    const changeDetected = () => {
+        // log.debug('Candidate changed', element.outerHTML)
+        if (predicate(element)) {
+            // log.debug('Fulfilled')
+            predicateFulfilledCallback()
+        }
+        // else log.debug('Not fulfilled')
+    }
+    const stopObserving = observeForChange(element, changeDetected)
+    const stopListening = listenForEvents(element, changeDetected)
+    return () => {
+        stopObserving()
+        stopListening()
+    }
+}
+
+function observeForChange(element, changedCallback) {
+    const observationConfig = {
+        attributes: true
+    }
+    const observer = new MutationObserver((mutations, observer) => {
+        changedCallback()
+    })
+    observer.observe(element, observationConfig)
+    return () => { observer.disconnect() }
+}
+
+function listenForEvents(element, changedCallback) {
+    element.addEventListener('loadedmetadata', changedCallback)
+    element.addEventListener('progress', changedCallback)
+    const removeListener = () => {
+        element.removeEventListener('loadedmetadata', changedCallback)
+        element.removeEventListener('progress', changedCallback)
+    }
+    return removeListener
+}
+
 function findMatchingElementIn(nodes, tagName) {
     if (nodes.length == 0)
         return null
@@ -77,6 +141,11 @@ function instantResolvePromise(object) {
     return new Promise(resolve => {
         resolve(object)
     })
+}
+
+function getAllElementsWith(tagName) {
+    const elements = document.getElementsByTagName(tagName)
+    return indexableToArray(elements)
 }
 
 /**
