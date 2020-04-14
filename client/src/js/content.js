@@ -100,6 +100,11 @@ function isValidVideo(node) {
         log.debug('Rejected because there are no played ranges')
         return false
     }
+    // To catch preview videos on Netflix
+    if (node.muted === true) {
+        log.debug('Rejected because video is muted')
+        return false
+    }
     log.debug('Accepted!', node, node.outerHTML)
     return true
 }
