@@ -1,11 +1,26 @@
 {
-  "name": "fuemschaun.frontend",
-  "version": "1.0.0",
+  "name": "fuemschaun.client",
+  "version": "0.0.1",
+  "description": "Client for Fümschaun",
   "scripts": {
     "start": "npm run build-prod",
     "build-prod": "cross-env NODE_ENV=production node utils/build.js",
     "build-dev": "cross-env NODE_ENV=development node utils/build.js",
     "dev": "cross-env NODE_ENV=development node utils/webserver.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fejx/fuemschaun.git"
+  },
+  "author": "Paul Hörmann & Florian Jahn",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/fejx/fuemschaun/issues"
+  },
+  "homepage": "https://github.com/fejx/fuemschaun#readme",
+  "dependencies": {
+    "socket.io-client": "^2.3.0",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "clean-webpack-plugin": "3.0.0",
@@ -24,9 +39,5 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "write-file-webpack-plugin": "4.5.1"
-  },
-  "dependencies": {
-    "socket.io-client": "^2.3.0",
-    "url-parse": "^1.4.7"
   }
 }

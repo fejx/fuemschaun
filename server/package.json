@@ -1,7 +1,7 @@
 {
-  "name": "fuemschaun.backend",
+  "name": "fuemschaun.server",
   "version": "0.0.1",
-  "description": "Backend for fuemschaun",
+  "description": "Server for Fümschaun",
   "main": "src/index.mjs",
   "scripts": {
     "start": "npm run prod",
@@ -12,16 +12,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/fejx/fuemschaun.git"
   },
-  "keywords": [
-    "fuemschaun",
-    "party",
-    "netflix",
-    "disney",
-    "video",
-    "prime",
-    "plus"
-  ],
-  "author": "Paul Hörmann",
+  "author": "Paul Hörmann & Florian Jahn",
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/fejx/fuemschaun/issues"
