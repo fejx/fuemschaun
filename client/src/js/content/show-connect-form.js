@@ -1,4 +1,4 @@
-import './show-connect-form.css'
+import './show-connect-form.styl'
 
 const CONTAINER_ID = 'fuemschaun-connect-form-container'
 
