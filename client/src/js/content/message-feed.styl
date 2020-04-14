@@ -1,0 +1,41 @@
+@import './style.styl'
+
+darker-border()
+    border-color: darken(@background-color, 40%)
+
++prefix-classes('fuemschaun-')
+    .message-feed-container
+        normalize-container()
+        overlay()
+        top 0
+        right 0
+        padding 10px
+        width 260px
+        background-color transparent
+
+        .message
+            width 100%
+            height 60px
+            line-height @height
+            border-style solid
+            border-width 2px
+            border-radius 5px
+            margin-bottom 5px
+            text-align center
+            span
+                display inline-block
+                vertical-align middle
+                line-height normal
+
+        .info
+            background-color: #cce5ff
+            darker-border()
+        .success
+            background-color: #d4edda
+            darker-border()
+        .warning
+            background-color: #fff3cd
+            darker-border()
+        .error
+            background-color: #f8d7da
+            darker-border()

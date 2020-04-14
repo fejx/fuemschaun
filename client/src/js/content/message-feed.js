@@ -1,3 +1,4 @@
+import './message-feed.styl'
 import { appendNewElement } from './html-building-helper'
 
 const CONTAINER_CLASS = 'fuemschaun-message-feed-container'
