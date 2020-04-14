@@ -1,6 +1,7 @@
 {
     "socket" : {
-        "url": "http://localhost:8889"
+        "url": "http://localhost:8889",
+        "reconnectionAttempts": 5
     },
     "sessionIdQueryParam": "fue-sid",
     "messageLevel": 1

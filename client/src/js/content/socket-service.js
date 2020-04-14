@@ -10,7 +10,8 @@ export class SocketService {
             query: {
                 username: username,
                 joinid: sessionId
-            }
+            },
+            reconnectionAttempts: CONFIG.socket.reconnectionAttempts
         })
 
         this.socket.on('connect', () => {
