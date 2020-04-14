@@ -1,5 +1,7 @@
 import './show-connect-form.css'
 
+const CONTAINER_ID = 'fuemschaun-connect-form-container'
+
 /**
  * @param {connectClickCallback} onConnectClick
  */
@@ -15,7 +17,7 @@ export function showConnectForm(onConnectClick) {
 
 function createForm(onConnectClick) {
     const container = document.createElement('div')
-    container.id = 'fuemschaun-container'
+    container.id = CONTAINER_ID
 
     const closeButton = appendNewElement(container, 'button', e => {
         e.classList.add('fuemschaun-close-button')
@@ -47,7 +49,7 @@ function createForm(onConnectClick) {
 }
 
 function removeForm() {
-    const form = document.getElementById('fuemschaun-container')
+    const form = document.getElementById(CONTAINER_ID)
     form.remove()
 }
 
