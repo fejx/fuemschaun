@@ -20,6 +20,7 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 
 function announceFound(element) {
     connectForm.showConnectForm(username => {
+        feed.mount()
         const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
         log.debug(`Connecting to '${sessionId}' as '${username}'`)
         const service = new SocketService(username, sessionId)
