@@ -10,5 +10,8 @@
     "elementFinder": {
         "minSize": 5,
         "minDurationS": 60
+    },
+    "messageFeed": {
+        "visibleDurationMs": 5000
     }
 }

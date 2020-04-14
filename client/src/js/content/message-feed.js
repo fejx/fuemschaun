@@ -60,16 +60,19 @@ function createContainer() {
 }
 
 function consoleLogAccordingTo(type, message) {
-    switch(type) {
-        case messageType.info:
-        case messageType.success:
-            console.info(message)
-            return
-        case messageType.warning:
-            console.warn(message)
-            return
-        case messageType.error:
-            console.error(message)
-            return
-    }
+    const element = appendNewElement(CONTAINER, 'div', element => {
+        element.classList.add('fuemschaun-message')
+        const typeClassName = getClassNameFromType(type)
+        element.classList.add(typeClassName)
+        appendNewElement(element, 'span', span => {
+            span.innerText = message
+        })
+    })
+    setTimeout(() => {
+        CONTAINER.removeChild(element)
+    }, CONFIG.messageFeed.visibleDurationMs)
+}
+
+function getClassNameFromType(type) {
+    return `fuemschaun-${type}`   
 }
