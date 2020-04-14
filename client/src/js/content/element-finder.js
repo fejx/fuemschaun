@@ -1,5 +1,3 @@
-const WAIT_TIMEOUT_MS = 10 * 1000
-
 /**
  * 
  * @param tagName {string} Name of the tag that the matching element should have (used to speed up initial search in the document).
@@ -56,7 +54,7 @@ function waitForElement(tagName, predicate) {
                 observer.disconnect()
                 reject('Timeout exceeded')
             }
-        }, WAIT_TIMEOUT_MS)
+        }, CONFIG.elementFinder.waitTimeoutMs)
 
         observer.observe(body, observationConfig)
     })
