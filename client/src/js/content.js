@@ -22,7 +22,7 @@ elementFinder.getOrWaitForElement('video', isValidVideo)
 function announceFound(element) {
     connectForm.showConnectForm(username => {
         const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
-        console.debug(`Connecting to '${sessionId}' as '${username}'`)
+        log.debug(`Connecting to '${sessionId}' as '${username}'`)
         const service = new SocketService(username, sessionId)
         service.onSessionCreated(sessionId => {
             urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
@@ -73,7 +73,7 @@ function announceFound(element) {
 }
 
 function announceNotFound(error) {
-    console.debug('No video element found', error)
+    log.debug('No video element found', error)
 }
 
 function isValidVideo(node) {

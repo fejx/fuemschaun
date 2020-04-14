@@ -1,3 +1,5 @@
+import log from 'loglevel'
+
 import { EventEmitter } from 'events'
 
 export class VideoWrapper {
@@ -11,20 +13,20 @@ export class VideoWrapper {
             this.isPlaying = false
             const currentTime = this.element.currentTime
             if (this.isBuffering(this.element.buffered, currentTime)) {
-                console.debug('Detected buffering')
+                log.debug('Detected buffering')
                 this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
             } else {
-                console.debug('Detected pause')
+                log.debug('Detected pause')
                 this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
             }
         })
         this.element.addEventListener('play', () => {
-            console.debug('Detected play')
+            log.debug('Detected play')
             this.isPlaying = true
             this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
         })
         this.element.addEventListener('seeked', () => {
-            console.debug('Detected seeked')
+            log.debug('Detected seeked')
             this.isPlaying = true
             this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
         })
