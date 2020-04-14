@@ -1,11 +1,12 @@
 #fuemschaun-container {
     /* Position fixed on bottom */
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     width: 100%;
     height: auto;
     z-index: 2147483647;
     /* Normalize styling */
+    display: block;
     box-sizing: border-box;
     padding: 20px;
     color: black;
