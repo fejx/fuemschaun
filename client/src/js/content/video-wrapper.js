@@ -9,27 +9,33 @@ export class VideoWrapper {
         this.shouldSkipNextEvent = false
         this.isPlaying = this.element.autoplay
 
-        this.element.addEventListener('pause', () => {
-            this.isPlaying = false
-            const currentTime = this.element.currentTime
-            if (this.isBuffering(this.element.buffered, currentTime)) {
-                log.debug('Detected buffering')
-                this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
-            } else {
-                log.debug('Detected pause')
-                this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
+        this.listeners = {
+            paused: () => {
+                this.isPlaying = false
+                const currentTime = this.element.currentTime
+                if (this.isBuffering(this.element.buffered, currentTime)) {
+                    log.debug('Detected buffering')
+                    this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
+                } else {
+                    log.debug('Detected pause')
+                    this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
+                }
+            },
+            played: () => {
+                log.debug('Detected play')
+                this.isPlaying = true
+                this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
+            },
+            seeked: () => {
+                log.debug('Detected seeked')
+                this.isPlaying = true
+                this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
             }
-        })
-        this.element.addEventListener('play', () => {
-            log.debug('Detected play')
-            this.isPlaying = true
-            this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
-        })
-        this.element.addEventListener('seeked', () => {
-            log.debug('Detected seeked')
-            this.isPlaying = true
-            this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
-        })
+        }
+
+        this.element.addEventListener('pause', this.listeners.paused)
+        this.element.addEventListener('play', this.listeners.played)
+        this.element.addEventListener('seeked', this.listeners.seeked)
     }
 
     emitOrSkip(name, data) {
