@@ -42,7 +42,9 @@ If you find a bug (or have any questions), [open an issue](https://github.com/fe
 
 ## Contribute
 
-If you want to contribute, please get in touch beforehand by [opening an issue](https://github.com/fejx/fuemschaun/issues/new).
+Contributions are welcome!
+Check out the [issues tagged with ‚good first issue’](https://github.com/fejx/fuemschaun/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
+If you want to contribute, please get in touch beforehand by e.g. [opening an issue](https://github.com/fejx/fuemschaun/issues/new).
 
 ## Building for production
 
