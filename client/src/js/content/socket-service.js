@@ -18,8 +18,8 @@ export class SocketService {
             feed.success('Connected')
         })
 
-        this.socket.on('disconnect', message => {
-            feed.warning('Connection lost: ', message)
+        this.socket.on('connect_error', message => {
+            feed.error('Connection lost', message)
         })
 
         this.socket.on('reconnecting', attempt => {
