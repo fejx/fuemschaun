@@ -6,6 +6,7 @@ import * as urlManip from './content/url-manipulation'
 import * as feed from './content/message-feed'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
+import { onVideoClosed } from './content/video-closed-watcher'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -20,6 +21,10 @@ findVideoAndShowLogin()
 function findVideoAndShowLogin() {
     elementFinder.getOrWaitForElement('video', isValidVideo)
         .then(element => {
+            const cancelVideoClosedListener = onVideoClosed(element, () => {
+                connectForm.removeForm()
+                findVideoAndShowLogin()
+            })
             connectForm.showConnectForm(username => {
                 feed.mount()
                 const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
@@ -69,6 +74,16 @@ function findVideoAndShowLogin() {
                         wrapper.play()
                     else
                         wrapper.pause()
+                })
+
+                // Close other listener to avoid double execution
+                cancelVideoClosedListener()
+                onVideoClosed(element, () => {
+                    service.disconnect()
+                    feed.info('Left session')
+                    feed.unmount()
+                    wrapper.removeListeners()
+                    findVideoAndShowLogin()
                 })
             })
         })
