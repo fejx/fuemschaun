@@ -15,61 +15,63 @@ window.browser = (function () {
 
 log.setDefaultLevel(CONFIG.logging.level)
 
-elementFinder.getOrWaitForElement('video', isValidVideo)
-    .then(announceFound)
+findVideoAndShowLogin()
 
-function announceFound(element) {
-    connectForm.showConnectForm(username => {
-        feed.mount()
-        const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
-        log.debug(`Connecting to '${sessionId}' as '${username}'`)
-        const service = new SocketService(username, sessionId)
-        service.onSessionCreated(sessionId => {
-            urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
-        })
-        const wrapper = new VideoWrapper(element)
+function findVideoAndShowLogin() {
+    elementFinder.getOrWaitForElement('video', isValidVideo)
+        .then(element => {
+            connectForm.showConnectForm(username => {
+                feed.mount()
+                const sessionId = urlManip.getParam(CONFIG.sessionIdQueryParam) || ''
+                log.debug(`Connecting to '${sessionId}' as '${username}'`)
+                const service = new SocketService(username, sessionId)
+                service.onSessionCreated(sessionId => {
+                    urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
+                })
+                const wrapper = new VideoWrapper(element)
 
-        wrapper.onPlaybackChanged(event => {
-            service.sendPlayOrPause(event.play)
+                wrapper.onPlaybackChanged(event => {
+                    service.sendPlayOrPause(event.play)
+                })
+                wrapper.onPositionChanged(event => {
+                    service.sendPositionChanged(event.currentTime)
+                })
+                wrapper.onBuffering(event => {
+                    service.sendBuffering(!event.play)
+                })
+                service.onPlayOrPause(isPlaying => {
+                    if (isPlaying)
+                        wrapper.play()
+                    else
+                        wrapper.pause()
+                })
+                service.onPositionChanged(newPosition => {
+                    wrapper.jumpTo(newPosition)
+                })
+                service.onBuffering(isBuffering => {
+                    feed.info('Someone is buffering')
+                    if (isBuffering)
+                        wrapper.pause()
+                    else
+                        wrapper.play()
+                })
+                service.onStateRequested(() => {
+                    return {
+                        position: wrapper.getPosition(),
+                        isPlaying: wrapper.isPlaying,
+                        createdAt: Date.now()
+                    }
+                })
+                service.onInitialState(state => {
+                    // TODO: Calculate position offset using createAt property
+                    wrapper.jumpTo(state.position)
+                    if (state.isPlaying)
+                        wrapper.play()
+                    else
+                        wrapper.pause()
+                })
+            })
         })
-        wrapper.onPositionChanged(event => {
-            service.sendPositionChanged(event.currentTime)
-        })
-        wrapper.onBuffering(event => {
-            service.sendBuffering(!event.play)
-        })
-        service.onPlayOrPause(isPlaying => {
-            if (isPlaying)
-                wrapper.play()
-            else
-                wrapper.pause()
-        })
-        service.onPositionChanged(newPosition => {
-            wrapper.jumpTo(newPosition)
-        })
-        service.onBuffering(isBuffering => {
-            feed.info('Someone is buffering')
-            if (isBuffering)
-                wrapper.pause()
-            else
-                wrapper.play()
-        })
-        service.onStateRequested(() => {
-            return {
-                position: wrapper.getPosition(),
-                isPlaying: wrapper.isPlaying,
-                createdAt: Date.now()
-            }
-        })
-        service.onInitialState(state => {
-            // TODO: Calculate position offset using createAt property
-            wrapper.jumpTo(state.position)
-            if (state.isPlaying)
-                wrapper.play()
-            else
-                wrapper.pause()
-        })
-    })
 }
 
 function isValidVideo(node) {
