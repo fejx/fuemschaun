@@ -12,12 +12,12 @@ All you need to to is:
 It should work an (almost) any website that contains a video!
 We are testing on the following services:
 
-| Service     | Functional         |
-|-------------|--------------------|
-| Youtube     | Yes                |
-| Prime Video | Yes (minor issues) |
-| Disney+     | Yes                |
-| Netflix     | No                 |
+| Service     | Functional |
+| ----------- | ---------- |
+| Youtube     | Yes        |
+| Prime Video | Yes        |
+| Disney+     | Yes        |
+| Netflix     | No         |
 
 If you find a website where Fümschaun does not work, please report it by [opening an issue](https://github.com/fejx/fuemschaun/issues/new).
 
