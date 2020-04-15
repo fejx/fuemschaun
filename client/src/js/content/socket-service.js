@@ -39,6 +39,10 @@ export class SocketService {
         })
     }
 
+    disconnect() {
+        this.socket.close()
+    }
+
     /**
      * This event is only fired if there was no session id provided or the provided session id was invalid
      * @param {sessionCreated} listener Listener that is fired when a new session has been created

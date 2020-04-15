@@ -16,6 +16,12 @@ export function showConnectForm(onConnectClick) {
  * @param {string} username
  */
 
+export function removeForm() {
+    const form = document.getElementById(CONTAINER_ID)
+    if (form != null)
+        form.remove()
+}
+
 function createForm(onConnectClick) {
     const container = document.createElement('div')
     container.id = CONTAINER_ID
@@ -47,9 +53,4 @@ function createForm(onConnectClick) {
     })
 
     return container
-}
-
-function removeForm() {
-    const form = document.getElementById(CONTAINER_ID)
-    form.remove()
 }

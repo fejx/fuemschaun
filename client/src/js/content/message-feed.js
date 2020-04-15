@@ -8,6 +8,12 @@ export function mount() {
     document.body.prepend(CONTAINER)
 }
 
+export function unmount() {
+    setTimeout(() => {
+        document.body.removeChild(CONTAINER)
+    }, CONFIG.messageFeed.visibleDurationMs)
+}
+
 /**
  * @enum {string}
  */

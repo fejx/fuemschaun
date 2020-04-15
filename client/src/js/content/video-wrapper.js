@@ -38,6 +38,12 @@ export class VideoWrapper {
         this.element.addEventListener('seeked', this.listeners.seeked)
     }
 
+    removeListeners() {
+        this.element.removeEventListener('pause', this.listeners.paused)
+        this.element.removeEventListener('play', this.listeners.played)
+        this.element.removeEventListener('seeked', this.listeners.seeked)
+    }
+
     emitOrSkip(name, data) {
         if (this.shouldSkipNextEvent)
             this.shouldSkipNextEvent = false
