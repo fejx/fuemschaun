@@ -81,7 +81,7 @@ export class VideoWrapper {
         if (this.shouldSkipNextEvent)
             this.shouldSkipNextEvent = false
         else
-            this.eventEmitter.emit(name, data)
+            this.emit(name, data)
     }
 
     skipNextEvent() {
