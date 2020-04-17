@@ -8,13 +8,15 @@ export class VideoWrapper {
         this.eventEmitter = new EventEmitter()
         this.shouldSkipNextEvent = false
         this.isPlaying = this.element.autoplay
+        this.isCurrentlyBuffering = false
 
         this.listeners = {
             pause: () => {
                 this.isPlaying = false
                 const currentTime = this.element.currentTime
                 if (this.isBuffering(this.element.buffered, currentTime)) {
-                    log.debug('Detected buffering')
+                    log.debug('Detected buffering start')
+                    this.isCurrentlyBuffering = true
                     this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
                 } else {
                     log.debug('Detected pause')
@@ -22,9 +24,17 @@ export class VideoWrapper {
                 }
             },
             play: () => {
-                log.debug('Detected play')
+                const currentTime = this.element.currentTime
                 this.isPlaying = true
-                this.emitOrSkip('playbackChanged', { play: true, currentTime: this.element.currentTime })
+                if (this.isCurrentlyBuffering) {
+                    log.debug('Detected buffering end')
+                    this.isCurrentlyBuffering = false
+                    this.emit('buffering', { play: true, currentTime: currentTime })
+                }
+                else {
+                    log.debug('Detected play')
+                    this.emitOrSkip('playbackChanged', { play: true, currentTime: currentTime })
+                }
             },
             seeked: () => {
                 log.debug('Detected seeked')
@@ -44,6 +54,10 @@ export class VideoWrapper {
             const listener = this.listeners[eventName]
             this.element.removeEventListener(eventName, listener)
         })
+    }
+
+    emit(name, data) {
+        this.eventEmitter.emit(name, data)
     }
 
     emitOrSkip(name, data) {
