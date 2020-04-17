@@ -7,6 +7,7 @@ import * as feed from './content/message-feed'
 import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 import { onVideoClosed } from './content/video-closed-watcher'
+import vendorSpecificActivator from './content/vendor-specific/vendor-specific-activator'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -15,6 +16,7 @@ window.browser = (function () {
 })()
 
 log.setDefaultLevel(CONFIG.logging.level)
+vendorSpecificActivator()
 
 findVideoAndShowLogin()
 
