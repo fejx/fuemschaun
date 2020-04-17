@@ -14,6 +14,10 @@ export class VideoWrapper {
             pause: () => {
                 this.isPlaying = false
                 const currentTime = this.element.currentTime
+                // Usually, buffering can be detected easily with the waiting event
+                // However, some players like Netflix do not fire the event
+                // Except, they pause the video in their script. This function can
+                // detect if the pause was triggered by the user or by buffering.
                 if (this.isBuffering(this.element.buffered, currentTime)) {
                     log.debug('Detected buffering start')
                     this.isCurrentlyBuffering = true
@@ -36,6 +40,7 @@ export class VideoWrapper {
                     this.emitOrSkip('playbackChanged', { play: true, currentTime: currentTime })
                 }
             },
+            // Buffer detection for well behaved video elements
             seeked: () => {
                 log.debug('Detected seeked')
                 this.isPlaying = true
