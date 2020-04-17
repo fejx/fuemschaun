@@ -19,11 +19,9 @@ export class VideoWrapper {
                 // Except, they pause the video in their script. This function can
                 // detect if the pause was triggered by the user or by buffering.
                 if (this.isBuffering(this.element.buffered, currentTime)) {
-                    log.debug('Detected buffering start')
                     this.isCurrentlyBuffering = true
                     this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
                 } else {
-                    log.debug('Detected pause')
                     this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
                 }
             },
@@ -31,18 +29,15 @@ export class VideoWrapper {
                 const currentTime = this.element.currentTime
                 this.isPlaying = true
                 if (this.isCurrentlyBuffering) {
-                    log.debug('Detected buffering end')
                     this.isCurrentlyBuffering = false
                     this.emitAlways('buffering', { play: true, currentTime: currentTime })
                 }
                 else {
-                    log.debug('Detected play')
                     this.emitOrSkip('playbackChanged', { play: true, currentTime: currentTime })
                 }
             },
             // Buffer detection for well behaved video elements
             seeked: () => {
-                log.debug('Detected seeked')
                 this.isPlaying = true
                 this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
             },
@@ -74,13 +69,15 @@ export class VideoWrapper {
     }
 
     emitAlways(name, data) {
+        log.debug(`Detected ${name} (playing: ${data.play})`)
         this.eventEmitter.emit(name, data)
     }
 
     emitOrSkip(name, data) {
-        if (this.eventSkipCount > 0)
+        if (this.eventSkipCount > 0) {
+            log.debug(`Skipped ${name}-event`)
             this.eventSkipCount--
-        else
+        } else
             this.emitAlways(name, data)
     }
 
