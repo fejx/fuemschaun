@@ -6,7 +6,7 @@ export class VideoWrapper {
     constructor(element) {
         this.element = element
         this.eventEmitter = new EventEmitter()
-        this.shouldSkipNextEvent = false
+        this.eventSkipCount = 0
         this.isPlaying = this.element.autoplay
         this.isCurrentlyBuffering = false
 
@@ -78,14 +78,14 @@ export class VideoWrapper {
     }
 
     emitOrSkip(name, data) {
-        if (this.shouldSkipNextEvent)
-            this.shouldSkipNextEvent = false
+        if (this.eventSkipCount > 0)
+            this.eventSkipCount--
         else
             this.emitAlways(name, data)
     }
 
     skipNextEvent() {
-        this.shouldSkipNextEvent = true
+        this.eventSkipCount++
     }
 
     play() {
