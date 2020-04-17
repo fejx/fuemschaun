@@ -82,7 +82,7 @@ function findVideoAndShowLogin() {
                     service.disconnect()
                     feed.info('Left session')
                     feed.unmount()
-                    wrapper.removeListeners()
+                    wrapper.release()
                     findVideoAndShowLogin()
                 })
             })

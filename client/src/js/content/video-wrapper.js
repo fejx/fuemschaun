@@ -39,7 +39,7 @@ export class VideoWrapper {
         })
     }
 
-    removeListeners() {
+    release() {
         Object.keys(this.listeners).forEach(eventName => {
             const listener = this.listeners[eventName]
             this.element.removeEventListener(eventName, listener)
