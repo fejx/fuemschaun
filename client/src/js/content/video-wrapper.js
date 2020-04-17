@@ -40,6 +40,18 @@ export class VideoWrapper {
                 log.debug('Detected seeked')
                 this.isPlaying = true
                 this.emitOrSkip('positionChanged', { play: true, currentTime: this.element.currentTime })
+            },
+            waiting: () => {
+                this.isPlaying = false
+                this.isCurrentlyBuffering = true
+                this.emit('buffering', { play: false, currentTime: this.element.currentTime })
+            },
+            playing: () => {
+                if (!this.isCurrentlyBuffering)
+                    return
+                this.isPlaying = true
+                this.isCurrentlyBuffering = false
+                this.emit('buffering', { play: true, currentTime: this.element.currentTime })
             }
         }
 
