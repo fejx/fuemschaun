@@ -33,7 +33,7 @@ export class VideoWrapper {
                 if (this.isCurrentlyBuffering) {
                     log.debug('Detected buffering end')
                     this.isCurrentlyBuffering = false
-                    this.emit('buffering', { play: true, currentTime: currentTime })
+                    this.emitAlways('buffering', { play: true, currentTime: currentTime })
                 }
                 else {
                     log.debug('Detected play')
@@ -49,14 +49,14 @@ export class VideoWrapper {
             waiting: () => {
                 this.isPlaying = false
                 this.isCurrentlyBuffering = true
-                this.emit('buffering', { play: false, currentTime: this.element.currentTime })
+                this.emitAlways('buffering', { play: false, currentTime: this.element.currentTime })
             },
             playing: () => {
                 if (!this.isCurrentlyBuffering)
                     return
                 this.isPlaying = true
                 this.isCurrentlyBuffering = false
-                this.emit('buffering', { play: true, currentTime: this.element.currentTime })
+                this.emitAlways('buffering', { play: true, currentTime: this.element.currentTime })
             }
         }
 
@@ -73,7 +73,7 @@ export class VideoWrapper {
         })
     }
 
-    emit(name, data) {
+    emitAlways(name, data) {
         this.eventEmitter.emit(name, data)
     }
 
@@ -81,7 +81,7 @@ export class VideoWrapper {
         if (this.shouldSkipNextEvent)
             this.shouldSkipNextEvent = false
         else
-            this.emit(name, data)
+            this.emitAlways(name, data)
     }
 
     skipNextEvent() {
