@@ -1,4 +1,4 @@
-import * as netflix from './netflix-aspect'
+import * as netflix from './netflix/netflix-aspects'
 
 export const aspects = {}
 

@@ -1,6 +1,6 @@
 import log from 'loglevel'
 
-import { VideoWrapper } from '../video-wrapper'
+import { VideoWrapper } from '../../video-wrapper'
 
 export const HOST = 'www.netflix.com'
 
