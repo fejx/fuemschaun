@@ -14,27 +14,12 @@ export class VideoWrapper {
             pause: () => {
                 this.isPlaying = false
                 const currentTime = this.element.currentTime
-                // Usually, buffering can be detected easily with the waiting event
-                // However, some players like Netflix do not fire the event
-                // Except, they pause the video in their script. This function can
-                // detect if the pause was triggered by the user or by buffering.
-                if (this.isBuffering(this.element.buffered, currentTime)) {
-                    this.isCurrentlyBuffering = true
-                    this.emitOrSkip('buffering', { play: false, currentTime: currentTime })
-                } else {
-                    this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
-                }
+                this.emitOrSkip('playbackChanged', { play: false, currentTime: currentTime })
             },
             play: () => {
                 const currentTime = this.element.currentTime
                 this.isPlaying = true
-                if (this.isCurrentlyBuffering) {
-                    this.isCurrentlyBuffering = false
-                    this.emitAlways('buffering', { play: true, currentTime: currentTime })
-                }
-                else {
-                    this.emitOrSkip('playbackChanged', { play: true, currentTime: currentTime })
-                }
+                this.emitOrSkip('playbackChanged', { play: true, currentTime: currentTime })
             },
             // Buffer detection for well behaved video elements
             seeked: () => {
@@ -122,12 +107,5 @@ export class VideoWrapper {
 
     getIsPlaying() {
         return this.isPlaying
-    }
-
-    isBuffering() {
-        const timeRange = this.element.buffered
-        const currentTime = this.element.currentTime
-        let lastTimeRangeIndex = timeRange.length - 1
-        return lastTimeRangeIndex < 0 || currentTime > timeRange.end(lastTimeRangeIndex) - 5;
     }
 }
