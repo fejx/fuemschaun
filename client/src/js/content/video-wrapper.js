@@ -29,14 +29,14 @@ export class VideoWrapper {
             waiting: () => {
                 this.isPlaying = false
                 this.isCurrentlyBuffering = true
-                this.emitAlways('buffering', { play: false, currentTime: this.element.currentTime })
+                this.emitBuffering(true)
             },
             playing: () => {
                 if (!this.isCurrentlyBuffering)
                     return
                 this.isPlaying = true
                 this.isCurrentlyBuffering = false
-                this.emitAlways('buffering', { play: true, currentTime: this.element.currentTime })
+                this.emitBuffering(false)
             }
         }
 
@@ -99,6 +99,10 @@ export class VideoWrapper {
 
     onPositionChanged(listener) {
         this.eventEmitter.on('positionChanged', listener)
+    }
+
+    emitBuffering(isBuffering) {
+        this.emitAlways('buffering', { play: !isBuffering, currentTime: this.element.currentTime })
     }
 
     getPosition() {
