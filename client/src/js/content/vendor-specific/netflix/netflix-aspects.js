@@ -13,6 +13,44 @@ export function weave() {
         const positionMilliseconds = position * 1000
         window.postMessage({ command: 'jumpTo', position: positionMilliseconds}, '*')
     }
+
+    const originalAddListeners = VideoWrapper.prototype.addListeners
+    VideoWrapper.prototype.addListeners = function() {
+        const cancelHandler = applyBufferingListener(
+            isBuffering => this.emitBuffering(isBuffering)
+        )
+        this.bufferingListenerCancelHandler = cancelHandler
+        this.listeners.waiting = () => {}
+        this.listeners.playing = () => {}
+        return originalAddListeners.apply(this, arguments)
+    }
+
+    const originalRelease = VideoWrapper.prototype.release
+    VideoWrapper.prototype.release = function() {
+        this.bufferingListenerCancelHandler()
+        return originalRelease.apply(this, arguments)
+    }
+}
+
+function applyBufferingListener(callback) {
+    let lastBufferingStatus = false
+    const observationConfig = {
+        attributeFilter: ['class'],
+        attributes: true
+    }
+    const container = document.querySelector('.nf-player-container')
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            const spinnerVisible = mutation.target.classList.contains('show-spinner')
+            const isBuffering = spinnerVisible
+            if (isBuffering == lastBufferingStatus)
+                return
+            lastBufferingStatus = isBuffering
+            callback(isBuffering)
+        })
+    })
+    observer.observe(container, observationConfig)
+    return () => observer.disconnect()
 }
 
 function inject(script) {
