@@ -9,7 +9,26 @@ All you need to to is:
 * Decide on a username
 * Share the link
 
+## How to get it
+
+The extension is not published on any official channels like the [Chrome Web Store](https://chrome.google.com/webstore) yet.
+A first release is planned as soon as the [Beta Milestone](https://github.com/fejx/fuemschaun/milestone/3) is completed.
+
+However, building for yourself is very easy (see the [build section](#building-for-production) for instructions).
+Expect bugs and rough edges!
+If you find a bug (or have any questions), [open an issue](https://github.com/fejx/fuemschaun/issues/new).
+
 ## Where it works
+
+### Browsers
+
+We are testing with Chromium/Google Chrome.
+Most other browsers except Firefox are based on Chromium.
+The extension should work fine on those aswell.
+
+If you want to run it on Firefox, the extension currently can only be [temporarily loaded](https://blog.mozilla.org/addons/2015/12/23/loading-temporary-add-ons/) because the build process does not produce an XPI-file yet.
+
+### Websites
 
 It should work an (almost) any website that contains a video!
 We are testing on the following services:
@@ -34,11 +53,6 @@ Therefore, everyone can be sure to watch the same thing.
 
 The bare essentials are already functional. However, Fümschaun is still a work in progress.
 To get a feeling on the progress, check out the [Issues](https://github.com/fejx/fuemschaun/issues) or [Projects](https://github.com/fejx/fuemschaun/projects/1) tabs.
-
-Until now, the extension is not published anywhere yet.
-However, building for yourself is very easy (see the [build section](#building-for-production) for instructions).
-Expect bugs and rough edges!
-If you find a bug (or have any questions), [open an issue](https://github.com/fejx/fuemschaun/issues/new).
 
 ## Contribute
 
