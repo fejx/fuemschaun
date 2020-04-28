@@ -1,5 +1,8 @@
 {
     "port": "8889",
     "certificate": null,
-    "maximumClients": 3000
+    "maximumClients": 3000,
+    "logging": {
+        "level": "info"
+    }
 }

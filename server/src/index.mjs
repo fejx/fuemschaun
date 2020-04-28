@@ -1,9 +1,12 @@
 import uuid from 'uuid'
 import socketio from 'socket.io'
 import config from 'config'
+import log from 'loglevel'
 
 import { limitClients } from './clientLimiter.mjs'
 import { createServer } from './serverSetup.mjs'
+
+log.setDefaultLevel(config.get('logging.level'))
 
 const port = process.env.PORT || config.get('port')
 
