@@ -1,3 +1,5 @@
+![Build status badge](https://github.com/fejx/fuemschaun/workflows/.github/workflows/build.yml/badge.svg)
+
 # Fümschaun: Watch remotely with your friends
 
 Fümschaun is a browser extension that allows people to watch a video remotely together.
