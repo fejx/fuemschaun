@@ -1,5 +1,6 @@
 import socketio from 'socket.io'
 import config from 'config'
+import log from 'loglevel'
 
 const clientCap = config.get('maximumClients')
 
@@ -23,5 +24,5 @@ export function limitClients(io) {
 function rejectConnection(socket) {
     socket.emit('disconnect', 'Client limit exceeded')
     socket.disconnect()
-    console.error(`Rejected ${socket.id} because limit is exceeded`)
+    log.error(`Rejected ${socket.id} because limit is exceeded`)
 }
