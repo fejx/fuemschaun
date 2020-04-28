@@ -9,9 +9,12 @@ console.info('Building...')
 
 webpack(
   config,
-  function (err) { if (err) throw err; }
+  function (err) {
+    if (err)
+      throw err
+    else {
+      console.info('Packaging to crx...')
+      package(config.output.path)
+    }
+  }
 )
-
-console.info('Packaging to crx...')
-
-package(config.output.path)
