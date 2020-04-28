@@ -1,0 +1,22 @@
+on: push
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/setup-node@v1.4.2
+        with:
+          node_version: '13.x'
+      - name: Install dependencies
+        run: npm i
+        working-directory: client
+      - name: Build CRX
+        run: npm run build-prod
+        working-directory: client
+      - name: Publish CRX
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: fuemschaun.crx
+          path: client/dist/fuemschaun.crx
