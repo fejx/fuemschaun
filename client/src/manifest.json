@@ -7,9 +7,10 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "19": "icon/icon20.png",
-      "20": "icon/icon20.png",
-      "38": "icon/icon38.png"
+      "16": "icon/logo16.png",
+      "48": "icon/logo48.png",
+      "128": "icon/logo128.png",
+      "512": "icon/logo512.png"
     }
   },
   "content_scripts": [
@@ -23,7 +24,10 @@
     }
   ],
   "icons": {
-    "48": "icon/icon38.png"
+    "16": "icon/logo16.png",
+    "48": "icon/logo48.png",
+    "128": "icon/logo128.png",
+    "512": "icon/logo512.png"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
