@@ -88,7 +88,7 @@ var options = {
       {
         from: 'src/icon',
         to: 'icon',
-        ignore: ['*.afphoto']
+        ignore: ['*.af*']
       }
     ]),
     new HtmlWebpackPlugin({
