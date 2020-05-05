@@ -7,10 +7,10 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon/logo16.png",
-      "48": "icon/logo48.png",
-      "128": "icon/logo128.png",
-      "512": "icon/logo512.png"
+      "16": "icon/icon16.png",
+      "48": "icon/icon48.png",
+      "128": "icon/icon128.png",
+      "512": "icon/icon512.png"
     }
   },
   "content_scripts": [
@@ -24,10 +24,10 @@
     }
   ],
   "icons": {
-    "16": "icon/logo16.png",
-    "48": "icon/logo48.png",
-    "128": "icon/logo128.png",
-    "512": "icon/logo512.png"
+    "16": "icon/icon16.png",
+    "48": "icon/icon48.png",
+    "128": "icon/icon128.png",
+    "512": "icon/icon512.png"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
