@@ -1,14 +1,16 @@
 ![Build status badge](https://github.com/fejx/fuemschaun/workflows/.github/workflows/build.yml/badge.svg)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/fejx/fuemschaun/master/client/src/icon/logo.svg" width="200px">
+  <img src="client/src/icon/logo.png" width="200px">
 </p>
+
 
 # Fümschaun: Watch remotely with your friends
 
 Fümschaun is a browser extension that allows people to watch a video remotely together.
 The extension synchronizes video playback between all peers.
 All you need to to is:
+
 * Open a website with a video
 * Decide on a username
 * Share the link
