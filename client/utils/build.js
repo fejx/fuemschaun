@@ -2,9 +2,10 @@ const packageCrx = require('./package-crx.js')
 const webpack = require('webpack')
 const config = require("../webpack.config")
 
-const distDir = './dist'
-
 delete config.chromeExtensionBoilerplate
+
+const srcDir = config.output.path
+const distDir = './dist'
 
 console.info('Building...')
 
@@ -15,7 +16,7 @@ webpack(
       throw err
     else {
       console.info('Packaging to crx...')
-      packageCrx(config.output.path, distDir)
+      packageCrx(srcDir, distDir)
     }
   }
 )
