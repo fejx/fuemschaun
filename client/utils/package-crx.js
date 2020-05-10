@@ -16,7 +16,7 @@ module.exports = (sourceDir) => {
         privateKey: fs.readFileSync(keyPath)
     })
 
-    crx.load(sourceDir)
+    return crx.load(sourceDir)
         .then(crx => crx.pack())
         .then(crxBuffer => {
             const updateXml = crx.generateUpdateXML()
