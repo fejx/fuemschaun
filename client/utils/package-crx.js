@@ -20,8 +20,8 @@ module.exports = (srcDir, distDir) => {
         .then(crxBuffer => {
             const updateXml = crx.generateUpdateXML()
 
-            writeToDist(distDir, 'update.xml', updateXml)
-            writeToDist(distDir, 'fuemschaun.crx', crxBuffer)
+            writeTo(distDir, 'update.xml', updateXml)
+            writeTo(distDir, 'fuemschaun.crx', crxBuffer)
             console.info(`Saved crx file in ${distDir}`)
         })
         .catch(err => {
@@ -50,8 +50,8 @@ function generateKeyFile(keyPath) {
     writeFileAndMkdirs(keyPath, privateKey)
 }
 
-function writeToDist(distDir, fileName, content) {
-    const filePath = path.join(distDir, fileName)
+function writeTo(dir, fileName, content) {
+    const filePath = path.join(dir, fileName)
     writeFileAndMkdirs(filePath, content)
 }
 
