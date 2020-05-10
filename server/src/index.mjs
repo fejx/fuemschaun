@@ -5,6 +5,7 @@ import log from 'loglevel'
 
 import { limitClients } from './clientLimiter.mjs'
 import { createServer } from './serverSetup.mjs'
+import * as bufferHandling from './bufferHandling.mjs'
 
 log.setDefaultLevel(config.get('logging.level'))
 
@@ -18,6 +19,8 @@ server.listen(port, function () {
 })
 
 limitClients(io)
+bufferHandling.setBroadcastFunction(sendToPeers)
+bufferHandling.setIoInstance(io)
 
 io.on('connection', function (socket) {
 	// This check is required because the socket might have been rejected by the client limiter
@@ -83,8 +86,9 @@ function createListenersFor(socket) {
 		sendToPeers(socket, 'play', { playing: data.playing })
 	})
 
-	socket.on('buffering', function () {
-		sendToPeers(socket, 'buffering', { buffering: true })
+	socket.on('buffering', function (data) {
+		const isBuffering = data.buffering
+		bufferHandling.changedFor(socket, isBuffering)
 	})
 }
 

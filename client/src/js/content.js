@@ -8,6 +8,7 @@ import { SocketService } from './content/socket-service'
 import { VideoWrapper } from './content/video-wrapper'
 import { onVideoClosed } from './content/video-closed-watcher'
 import vendorSpecificActivator from './content/vendor-specific/vendor-specific-activator'
+import { BufferHandler } from './content/buffer-handler'
 
 window.browser = (function () {
     return window.msBrowser ||
@@ -36,15 +37,13 @@ function findVideoAndShowLogin() {
                     urlManip.setParam(CONFIG.sessionIdQueryParam, sessionId)
                 })
                 const wrapper = new VideoWrapper(element)
+                const bufferHandler = new BufferHandler(wrapper, service, feed)
 
                 wrapper.onPlaybackChanged(event => {
                     service.sendPlayOrPause(event.play)
                 })
                 wrapper.onPositionChanged(event => {
                     service.sendPositionChanged(event.currentTime)
-                })
-                wrapper.onBuffering(event => {
-                    service.sendBuffering(!event.play)
                 })
                 service.onPlayOrPause(isPlaying => {
                     if (isPlaying)
@@ -54,13 +53,6 @@ function findVideoAndShowLogin() {
                 })
                 service.onPositionChanged(newPosition => {
                     wrapper.jumpTo(newPosition)
-                })
-                service.onBuffering(isBuffering => {
-                    feed.info('Someone is buffering')
-                    if (isBuffering)
-                        wrapper.pause()
-                    else
-                        wrapper.play()
                 })
                 service.onStateRequested(() => {
                     return {

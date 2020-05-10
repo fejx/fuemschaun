@@ -112,7 +112,7 @@ export class SocketService {
      */
     onBuffering(listener) {
         this.socket.on('buffering', message => {
-            listener(message.buffering)
+            listener(message.state)
         })
     }
     /**
