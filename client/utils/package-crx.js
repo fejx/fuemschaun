@@ -8,7 +8,6 @@ const keyPath = './secrets/key.pem'
 
 module.exports = (srcDir, distDir) => {
     assertKeyFile()
-    clean(distDir)
 
     const crx = new ChromeExtension({
         codebase: 'http://localhost:8000/myExtension.crx',
@@ -27,11 +26,6 @@ module.exports = (srcDir, distDir) => {
         .catch(err => {
             console.error(err)
         })
-}
-
-function clean(distDir) {
-    if (fs.existsSync(distDir))
-        fs.rmdirSync(distDir, { recursive: true })
 }
 
 function assertKeyFile() {

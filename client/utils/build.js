@@ -1,3 +1,4 @@
+const fs = require('fs')
 const packageCrx = require('./package-crx')
 const webpack = require('webpack')
 const config = require("../webpack.config")
@@ -16,7 +17,13 @@ webpack(
       throw err
     else {
       console.info('Packaging to crx...')
+      clean(distDir)
       packageCrx(srcDir, distDir)
     }
   }
 )
+
+function clean(distDir) {
+  if (fs.existsSync(distDir))
+      fs.rmdirSync(distDir, { recursive: true })
+}
