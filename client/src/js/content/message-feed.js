@@ -57,7 +57,7 @@ export function error(message) {
  * @param {string} message 
  */
 export function show(type, message) {
-    consoleLogAccordingTo(type, message)
+    addMessageToContainer(type, message)
 }
 
 function createContainer() {
@@ -66,7 +66,7 @@ function createContainer() {
     return container
 }
 
-function consoleLogAccordingTo(type, message) {
+function addMessageToContainer(type, message) {
     const element = appendNewElement(CONTAINER, 'div', element => {
         element.classList.add('fuemschaun-message')
         const typeClassName = getClassNameFromType(type)
