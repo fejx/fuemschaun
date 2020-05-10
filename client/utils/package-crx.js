@@ -5,11 +5,10 @@ const rsa = require('node-rsa')
 const ChromeExtension = require('crx')
 
 const keyPath = './secrets/key.pem'
-const distDir = './dist'
 
-module.exports = (sourceDir) => {
+module.exports = (sourceDir, distDir) => {
     assertKeyFile()
-    clean()
+    clean(distDir)
 
     const crx = new ChromeExtension({
         codebase: 'http://localhost:8000/myExtension.crx',
@@ -21,8 +20,8 @@ module.exports = (sourceDir) => {
         .then(crxBuffer => {
             const updateXml = crx.generateUpdateXML()
 
-            writeToDist('update.xml', updateXml)
-            writeToDist('fuemschaun.crx', crxBuffer)
+            writeToDist(distDir, 'update.xml', updateXml)
+            writeToDist(distDir, 'fuemschaun.crx', crxBuffer)
             console.info(`Saved crx file in ${distDir}`)
         })
         .catch(err => {
@@ -30,7 +29,7 @@ module.exports = (sourceDir) => {
         })
 }
 
-function clean() {
+function clean(distDir) {
     if (fs.existsSync(distDir))
         fs.rmdirSync(distDir, { recursive: true })
 }
@@ -51,7 +50,7 @@ function generateKeyFile(keyPath) {
     writeFileAndMkdirs(keyPath, privateKey)
 }
 
-function writeToDist(fileName, content) {
+function writeToDist(distDir, fileName, content) {
     const filePath = path.join(distDir, fileName)
     writeFileAndMkdirs(filePath, content)
 }
