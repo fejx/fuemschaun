@@ -1,7 +1,6 @@
-const
-  packageCrx = require('./package-crx.js'),
-  webpack = require('webpack'),
-  config = require("../webpack.config")
+const packageCrx = require('./package-crx.js')
+const webpack = require('webpack')
+const config = require("../webpack.config")
 
 delete config.chromeExtensionBoilerplate
 
