@@ -75,11 +75,15 @@ export class VideoWrapper {
     }
 
     play() {
+        if (this.isPlaying)
+            return
         this.skipNextEvent()
         this.element.play()
     }
 
     pause() {
+        if (!this.isPlaying)
+            return
         this.skipNextEvent()
         this.element.pause()
     }
