@@ -1,5 +1,3 @@
-import log from 'loglevel'
-
 /**
  * 
  * @param tagName {string} Name of the tag that the matching element should have (used to speed up initial search in the document).
