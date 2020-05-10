@@ -14,15 +14,15 @@ export function weave() {
         window.postMessage({ command: 'jumpTo', position: positionMilliseconds}, '*')
     }
 
-    const originalAddListeners = VideoWrapper.prototype.addListeners
-    VideoWrapper.prototype.addListeners = function() {
+    const originalEnableListeners = VideoWrapper.prototype.enableListeners
+    VideoWrapper.prototype.enableListeners = function() {
         const cancelHandler = applyBufferingListener(
             isBuffering => this.emitBuffering(isBuffering)
         )
         this.bufferingListenerCancelHandler = cancelHandler
         this.listeners.waiting = () => {}
         this.listeners.playing = () => {}
-        return originalAddListeners.apply(this, arguments)
+        return originalEnableListeners.apply(this, arguments)
     }
 
     const originalRelease = VideoWrapper.prototype.release

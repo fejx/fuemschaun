@@ -40,10 +40,10 @@ export class VideoWrapper {
             }
         }
 
-        this.addListeners()
+        this.enableListeners()
     }
 
-    addListeners() {
+    enableListeners() {
         Object.keys(this.listeners).forEach(eventName => {
             const listener = this.listeners[eventName]
             this.element.addEventListener(eventName, listener)
