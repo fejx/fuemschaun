@@ -6,7 +6,7 @@ const ChromeExtension = require('crx')
 
 const keyPath = './secrets/key.pem'
 
-module.exports = (sourceDir, distDir) => {
+module.exports = (srcDir, distDir) => {
     assertKeyFile()
     clean(distDir)
 
@@ -15,7 +15,7 @@ module.exports = (sourceDir, distDir) => {
         privateKey: fs.readFileSync(keyPath)
     })
 
-    return crx.load(sourceDir)
+    return crx.load(srcDir)
         .then(crx => crx.pack())
         .then(crxBuffer => {
             const updateXml = crx.generateUpdateXML()
