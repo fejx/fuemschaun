@@ -21,10 +21,6 @@ module.exports = (srcDir, distDir) => {
 
             writeTo(distDir, 'update.xml', updateXml)
             writeTo(distDir, 'fuemschaun.crx', crxBuffer)
-            console.info(`Saved crx file in ${distDir}`)
-        })
-        .catch(err => {
-            console.error(err)
         })
 }
 
