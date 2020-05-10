@@ -17,9 +17,12 @@ webpack(
     if (err)
       throw err
     else {
-      console.info('Packaging to crx...')
       clean(distDir)
-      packageCrx(srcDir, distDir)
+      console.info('Packaging...')
+      const crxPromise = packageCrx(srcDir, distDir)
+      Promise.all([crxPromise]).then(() => {
+        console.info('Done')
+      })
     }
   }
 )
