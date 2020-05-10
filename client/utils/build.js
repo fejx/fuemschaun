@@ -1,5 +1,5 @@
 const
-  package = require('./package.js'),
+  packageCrx = require('./package-crx.js'),
   webpack = require('webpack'),
   config = require("../webpack.config")
 
@@ -14,7 +14,7 @@ webpack(
       throw err
     else {
       console.info('Packaging to crx...')
-      package(config.output.path)
+      packageCrx(config.output.path)
     }
   }
 )
