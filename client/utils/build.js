@@ -1,4 +1,4 @@
-const packageCrx = require('./package-crx.js')
+const packageCrx = require('./package-crx')
 const webpack = require('webpack')
 const config = require("../webpack.config")
 
