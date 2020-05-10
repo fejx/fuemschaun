@@ -1,5 +1,5 @@
 import './message-feed.styl'
-import { appendNewElement } from './html-building-helper'
+import { appendNewElement, prependNewElement } from './html-building-helper'
 
 const CONTAINER_CLASS = 'fuemschaun-message-feed-container'
 const CONTAINER = createContainer()
@@ -67,7 +67,7 @@ function createContainer() {
 }
 
 function addMessageToContainer(type, message) {
-    const element = appendNewElement(CONTAINER, 'div', element => {
+    const element = prependNewElement(CONTAINER, 'div', element => {
         element.classList.add('fuemschaun-message')
         const typeClassName = getClassNameFromType(type)
         element.classList.add(typeClassName)
