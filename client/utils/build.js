@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const packageCrx = require('./package-crx')
 const webpack = require('webpack')
 const config = require("../webpack.config")
@@ -25,5 +26,19 @@ webpack(
 
 function clean(distDir) {
   if (fs.existsSync(distDir))
-      fs.rmdirSync(distDir, { recursive: true })
+      removeEverythingIn(distDir)
+  else
+    fs.mkdirSync(distDir, { recursive: true })
+}
+
+function removeEverythingIn(dir) {
+  const content = fs.readdirSync(dir)
+  content.forEach(file => {
+    const joined = path.join(dir, file)
+    const isDir = fs.lstatSync(joined).isDirectory()
+    if (isDir)
+      fs.rmdirSync(joined, { recursive: true })
+    else
+      fs.unlinkSync(joined)
+  })
 }
